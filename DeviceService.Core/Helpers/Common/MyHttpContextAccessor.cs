@@ -1,0 +1,25 @@
+﻿using Microsoft.AspNetCore.Http;
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace DeviceService.Core.Helpers.Common
+{
+    public static class MyHttpContextAccessor
+    {
+        private static IHttpContextAccessor _HttpContextAccessor;
+        
+        public static IHttpContextAccessor HttpContextAccessor
+        {
+            set
+            {
+                _HttpContextAccessor = value;
+            }
+        }
+
+        public static IHttpContextAccessor GetHttpContextAccessor()
+        {
+            return _HttpContextAccessor;
+        }
+    }
+}

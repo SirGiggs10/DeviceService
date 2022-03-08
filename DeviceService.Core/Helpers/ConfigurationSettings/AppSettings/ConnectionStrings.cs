@@ -6,16 +6,16 @@ namespace DeviceService.Core.Helpers.ConfigurationSettings.AppSettings
 {
     public class ConnectionStrings
     {
-        private string _DecryptionServiceConnectionString { get; set; }
-        public string DecryptionServiceConnectionString
+        private string _DeviceDbConnectionString { get; set; }
+        public string DeviceDbConnectionString
         {
             get
             {
-                return GTBEncryptLib.DecryptText(_DecryptionServiceConnectionString);
+                return GTBEncryptLib.DecryptText(_DeviceDbConnectionString);
             }
             set
             {
-                _DecryptionServiceConnectionString = value;
+                _DeviceDbConnectionString = value;
             }
         }
     }

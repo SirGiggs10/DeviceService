@@ -1,4 +1,6 @@
-﻿using System;
+﻿using DeviceService.Core.Helpers.ConfigurationSettings.ConfigManager;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
@@ -11,11 +13,12 @@ namespace DeviceService.Core.Data.DataContext
         {
             if (!optionsBuilder.IsConfigured)
             {
-                var connectionString = configuration["ConnectionStrings-TransactionApplicationConnection"] ?? configuration["ConnectionStrings:TransactionApplicationConnection"];
+                var connectionString = ConfigSettings.ConnectionString.DeviceDbConnectionString;
+
                 optionsBuilder.UseSqlServer(connectionString,
                     sqlServerOptionsAction: sqlOptions =>
                     {
-                        sqlOptions.MigrationsAssembly("Api.Transaction");
+                        //sqlOptions.MigrationsAssembly("");
                         //Configuring Connection Resiliency: https://docs.microsoft.com/en-us/ef/core/miscellaneous/connection-resiliency
                         sqlOptions.EnableRetryOnFailure(maxRetryCount: 15, maxRetryDelay: TimeSpan.FromSeconds(30), errorNumbersToAdd: null);
                     });

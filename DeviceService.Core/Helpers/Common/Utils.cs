@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace DeviceService.Core.Helpers.Common
@@ -15,33 +16,41 @@ namespace DeviceService.Core.Helpers.Common
         public const int StatusCode_BadRequest = 3;
         public const int StatusCode_Unauthorized = 4;
         public const int StatusCode_PartialContent = 5;
+        public const int StatusCode_ForbiddenError = 6;
         public const int StatusCode_Failure = 9;
         public const int StatusCode_DatabaseConnectionTimeout = 10;
         public const int StatusCode_StoredProcedureError = 12;
         public const int StatusCode_ExceptionError = 13;
-        public const int StatusCode_DatabaseConnectionError = 14;
-        public const int StatusCode_InvalidUserType = 15;
-        public const int StatusCode_InvalidTransactionType = 16;
+        public const int StatusCode_DatabaseConnectionError = 14;   
+        
+        public const int Success = 20;
+        public const int NotFound = 22;
+        public const int ObjectNull = 23;
+        public const int SaveError = 24;
+        public const int SaveNoRowAffected = 25;
+        public const int NotSucceeded = 26;
+        public const int ObjectExists = 27;
+        public const int BadRequest = 28;
+        public const int SignInError = 29;
+        public const int EmailAlreadyConfirmed = 30;
+        public const int PreviousPasswordStorageError = 31;
+        public const int NewPasswordError = 32;
+        public const int InvalidUserType = 33;
+        public const int RoleAssignmentError = 34;
+        public const int CustomerCreationError = 35;
+        public const int InvalidFileSize = 36;
+        public const int CloudinaryFileUploadError = 38;
+        public const int CloudinaryFileDeleteError = 39;
+        public const int CloudinaryDeleteError = 40;
+        public const int UserNotAllowed = 41;
+        public const int AuditReportError = 42;
 
         //CBNENaira ENDPOINT STATUS CODES
-        public const int StatusCode_CBNENairaEndpointSuccess = 0;
-        public const int StatusCode_CBNENairaEndpointDatabaseConnectionTimeout = 97;  //NOT USED
-        public const int StatusCode_CBNENairaEndpointUnknownError = 1;
-        public const int StatusCode_CBNENairaEndpointBadRequest = 2;
-        public const int StatusCode_CBNENairaEndpointDatabaseConnectionError = 96;
-        public const int StatusCode_CBNENairaEndpoint_FILoginFailed = 11;
-        public const int StatusCode_CBNENairaEndpoint_UserLoginFailed = 12;
-        public const int StatusCode_CBNENairaEndpoint_UserDetailFetchFailed = 13;
-        public const int StatusCode_CBNENairaEndpoint_TokenDecryptionError = 14;
-        public const int StatusCode_CBNENairaEndpoint_ENairaWalletAccountNumberMissing = 15;
-        public const int StatusCode_CBNENairaEndpoint_LogTransactionFailed = 16;
-        public const int StatusCode_CBNENairaEndpoint_UserAuthorizeWithdrawalFailed = 17;
-        public const int StatusCode_CBNENairaEndpoint_EmployeeDetailFetchFailed = 18;
-        public const int StatusCode_CBNENairaEndpoint_BranchDetailFetchFailed = 19;
-        public const int StatusCode_CBNENairaEndpoint_FISubmitTransactionTypeFailed = 20;
-        public const int StatusCode_CBNENairaEndpoint_PostTransferError = 21;
-        public const int StatusCode_CBNENairaEndpoint_UpdateTransactionLogFailed = 22;
-        public const int StatusCode_CBNENairaEndpoint_SubmitTransactionException = 23;
+        public const int StatusCode_BVNValidationEndpoint_Success = 0;
+        public const int StatusCode_BVNValidationEndpoint_DatabaseConnectionTimeout = 97;  //NOT USED
+        public const int StatusCode_BVNValidationEndpoint_UnknownError = 1;
+        public const int StatusCode_BVNValidationEndpoint_BadRequest = 2;
+        public const int StatusCode_BVNValidationEndpoint_DatabaseConnectionError = 96;
 
         //STATUS MESSAGES
         public const string StatusMessage_Success = "Request Successful.";
@@ -49,38 +58,50 @@ namespace DeviceService.Core.Helpers.Common
         public const string StatusMessage_TokenNullValue = "Authorization Token Value is Null";
         public const string StatusMessage_BadRequest = "Required request parameter is Invalid / Missing";
         public const string StatusMessage_Unauthorized = "Authentication Token is Unauthorized";
-        public const string StatusMessage_PartialContent = "Invalid Response from POS Terminal Monitoring System";
+        public const string StatusMessage_PartialContent = "Invalid Response from BVN Service";
+        public const string StatusMessage_ForbiddenError = "User Not Authorized";
         public const string StatusMessage_Failure = "Request Failed";
         public const string StatusMessage_DatabaseConnectionTimeout = "Database Connection Timeout";
         public const string StatusMessage_StoredProcedureError = "Stored Procedured Execution Failed";
         public const string StatusMessage_ExceptionError = "An Exception Occured";
         public const string StatusMessage_DatabaseConnectionError = "Database Connection Error";
-        public const string StatusMessage_InvalidUserType = "Invalid User Type";
-        public const string StatusMessage_InvalidTransactionType = "Invalid Transaction Type";
+
+        public const string StatusMessageSuccess = "Request Successful";
+        public const string StatusMessageMailFailure = "Object could not send Mail";
+        public const string StatusMessageNotFound = "Object was not Found";
+        public const string StatusMessageObjectNull = "Object is Empty";
+        public const string StatusMessageSaveError = "Object was unable to Save";
+        public const string StatusMessageSaveNoRowAffected = "Object Save Action was not executed";
+        public const string StatusMessageNotSucceeded = "Action on this Object did not Succeed";
+        public const string StatusMessageObjectExists = "Object already Exists";
+        public const string StatusMessageBadRequest = "Bad Request";
+        public const string StatusMessageSignInError = "Sign In Error";
+        public const string StatusMessageEmailAlreadyConfirmed = "The Email Address has already been Confirmed by Ayuda";
+        public const string StatusMessagePreviousPasswordStorageError = "There was Error Storing Previous Password";
+        public const string StatusMessageNewPasswordError = "New Password Error";
+        public const string StatusMessageInvalidUserType = "The User Type is Invalid";
+        public const string StatusMessageRoleAssignmentError = "Unable to Assign Role";
+        public const string StatusMessageCustomerCreationError = "Customer Creation Failed";
+        public const string StatusMessageInvalidFileSize = "The Size of the Uploaded File is Invalid";
+        public const string StatusMessageCloudinaryFileUploadError = "An Error Occured While Uploading the File";
+        public const string StatusMessageCloudinaryFileDeleteError = "An Error Occured While Deleting the File";
+        public const string StatusMessageCloudinaryDeleteError = "An Error Occured while Deleting files from Cloudinary";
+        public const string StatusMessageUserNotAllowed = "User Not Allowed Because He/She doesnt belong to Certain Support Level and Department";
+        public const string StatusMessageAuditReportError = "An Error Occured during User Activity Audit";
 
         //CBNENaira ENDPOINT STATUS MESSAGES
-        public const string StatusMessage_CBNENairaLoginEndpointSuccess = "Login Successful. User Account Details Fetched";
-        public const string StatusMessage_CBNENairaSubmitTransactionEndpointSuccess = "Transaction Submitted Successfully";
-        public const string StatusMessage_CBNENairaEndpointDatabaseConnectionTimeout = "Database Connection Timeout Occured";
-        public const string StatusMessage_CBNENairaEndpointLoginUnknownError = "Unable to Login User";
-        public const string StatusMessage_CBNENairaEndpointDatabaseConnectionError = "System Malfunction";
-        public const string StatusMessage_CBNENairaEndpoint_FILoginFailed = "FI Login Failed";
-        public const string StatusMessage_CBNENairaEndpoint_UserLoginFailed = "User Login Failed";
-        public const string StatusMessage_CBNENairaEndpoint_UserDetailFetchFailed = "Unable to Fetch User Details";
-        public const string StatusMessage_CBNENairaEndpoint_FITokenDecryptionError = "Error Occured Decrypting FI Auth Token";
-        public const string StatusMessage_CBNENairaEndpoint_UserTokenDecryptionError = "Error Occured Decrypting User Auth Token";
-        public const string StatusMessage_CBNENairaEndpoint_ENairaWalletAccountNumberMissing = "User ENairaWalletAccountNumber Not Existing in BankAccounts";
-        public const string StatusMessage_CBNENairaLoginEndpoint_UserException = "Login Failed. User Account Details Not Fetched";
-        public const string StatusMessage_CBNENairaLoginEndpoint_TransactionException = "Submit Transaction Request Failed";
-        public const string StatusMessage_CBNENairaEndpoint_LogTransactionFailed = "Unable to Log this Transaction";
-        public const string StatusMessage_CBNENairaEndpoint_UserAuthorizeWithdrawalFailed = "Unable to Authorize User Withdrawal";
-        public const string StatusMessage_CBNENairaEndpoint_EmployeeDetailFetchFailed = "Unable to Fetch FI Employee Details";
-        public const string StatusMessage_CBNENairaEndpoint_BranchDetailFetchFailed = "Unable to Fetch FI Branch Details";
-        public const string StatusMessage_CBNENairaEndpoint_FISubmitTransactionTypeFailed = "Unable to Process Transaction. Try Again.";
-        public const string StatusMessage_CBNENairaEndpoint_PostTransferError = "Transfer Posting Failed";
-        public const string StatusMessage_CBNENairaEndpoint_UpdateTransactionLogFailed = "Unable to Update Transaction Log";
-        public const string StatusMessage_CBNENairaEndpoint_PostTransferNubanNotValidError = "Unable to Convert Nuban Account Number To Regular";
-        public const string StatusMessage_CBNENairaEndpoint_SubmitTransactionInsufficientBalance = "Insufficient ENaira Balance.";
+        public const string StatusMessage_BVNValidationEndpoint_Success = "BVN Validation Successful";
+        public const string StatusMessage_BVNValidationEndpoint_DatabaseConnectionTimeout = "Database Connection Timeout Occured";
+        public const string StatusMessage_BVNValidationEndpoint_UnknownError = "Unable to Validate BVN";
+        public const string StatusMessage_CBNENairaEndpoint_DatabaseConnectionError = "System Malfunction";
+
+        //USER TYPES
+        public const int AdministratorUser = 1;
+        public const int NormalUser = 2;
+
+        //CUSTOM APPLICATION USER CLAIM TYPES
+        public const string ClaimType_UserType = "UserType";
+        public const string ClaimType_UserEmail = "UserEmail";
 
         //LOG TYPE
         public enum LogType
@@ -102,51 +123,19 @@ namespace DeviceService.Core.Helpers.Common
             LOG_ERROR = 3
         }
 
-        //GRAPHQL COMMAND TYPES
-        public enum GraphQLCommandType
-        {
-            /// <summary>
-            /// MUTATION Command Type
-            /// </summary>
-            [Description("MUTATION Command Type")]
-            MUTATION = 1,
-            /// <summary>
-            /// QUERY Command Type
-            /// </summary>
-            [Description("QUERY Command Type")]
-            QUERY = 2,
-        }
-
         //APPLICATION HTTP STATUS CODES
         public const int HttpStatusCode_Ok = StatusCodes.Status200OK;
         public const int HttpStatusCode_BadRequest = StatusCodes.Status400BadRequest;
         public const int HttpStatusCode_InternalServer = StatusCodes.Status500InternalServerError;
 
-        //CBNENaira RESPONSE CODES
-        public const string ResponseCode_Success = "00";
-
-        //GET CBNENaira RESPONSE DESCRIPTIONS
-        public static string GetResponseDescription(string responseCode)
-        {
-            switch (responseCode)
-            {
-                case ResponseCode_Success:
-                    return "Approved or completed successfully";
-                
-                default:
-                    //UNREACHABLE PART OF CODE
-                    return "Unknown Response Code was Gotten from CBNENaira...Try Again Later.";
-            }
-        }
-
-        //CBNENaira API HTTP STATUS CODES
+        //API HTTP STATUS CODES
         public const int HttpStatusCode_200 = 200;
         public const int HttpStatusCode_400 = 400;
         public const int HttpStatusCode_401 = 401;
         public const int HttpStatusCode_403 = 403;
         public const int HttpStatusCode_500 = 500;
 
-        //GET CBNENaira HTTP STATUS CODES DESCRIPTION
+        //GET HTTP STATUS CODES DESCRIPTION
         public static string GetHttpStatusDescription(int httpStatusCode)
         {
             switch (httpStatusCode)
@@ -167,243 +156,93 @@ namespace DeviceService.Core.Helpers.Common
             }
         }
 
-        //CBNENaira USERTYPES
-        public enum UserType
+        //AES ENCRYPTION
+        #region AES ENCRYPTION
+
+        //AES ENCRYPTION MODES
+        public const int AES_Mode_CBC = 1;
+        public const int AES_Mode_ECB = 2;
+        public const int AES_Mode_CTS = 3;
+
+        //AES ENCRYPTION KEYSIZES
+        public const int AES_KeySize_128 = 1;
+        public const int AES_KeySize_256 = 2;
+
+        //AES ENCRYPTION RETURN TYPE
+        public const int AES_ReturnType_Base64 = 1;
+        public const int AES_ReturnType_Hex = 2;
+
+        //AES ENCRYPTION DEFAULT VALUES
+        public const int AES_Mode_Default = 1;
+        public const int AES_KeySize_Default = 1;
+        public const int AES_ReturnType_Default = 1;
+
+        public static CipherMode GetCipherMode(int cipherModeCode)
         {
-            Customer = 1,
-            Merchant = 2
-        }
+            CipherMode cipherMode;
 
-        //USER LOGIN TOKEN CLAIM TYPES
-        public const string ClaimType_UserId = "userid";
-
-        //CBNENaira TRANSACTION TYPES
-        public enum TransactionType
-        {
-            Deposit = 1,
-            Withdrawal = 2
-        }
-
-        //CBNENaira AMOUNT TYPES
-        public enum AmountType
-        {
-            ENaira = 1,
-            Naira = 2
-        }
-
-        //CBNENaira Transaction States
-        public enum ENairaTransactionCurrentState
-        {
-            Settling = 1
-        }
-
-        //CBNENaira Destination Fund Type
-        public enum DestinationFundType
-        {
-            BANK_ACCOUNT = 1,
-            CASH = 2
-        }
-
-        //BASIS RESPONSE CODES AND DESCRIPTION
-        public static string GetBasisResponseDescription(string responseCode)
-        {
-            var respDesc = string.Empty;
-
-            switch(responseCode)
+            switch (cipherModeCode)
             {
-                case "@ERR1@":
+                case AES_Mode_CBC:
 
-                    respDesc = "Invalid Source Account";
-
-                    break;
-                case "@ERR2@":
-
-                    respDesc = "Source Account has restrictions";
+                    cipherMode = CipherMode.CBC;
 
                     break;
-                case "@ERR3@":
+                case AES_Mode_ECB:
 
-                    respDesc = "Source Account has restrictions";
-
-                    break;
-                case "@ERR4@":
-
-                    respDesc = "Target Account has restrictions";
+                    cipherMode = CipherMode.ECB;
 
                     break;
-                case "@ERR5@":
 
-                    respDesc = "Invalid Amount";
+                case AES_Mode_CTS:
 
-                    break;
-                case "@ERR6@":
-
-                    respDesc = "Unknown Error: Transaction Unsuccessful!";
+                    cipherMode = CipherMode.CTS;
 
                     break;
-                case "@ERR7@":
 
-                    respDesc = "Operation Successful!";
-
-                    break;
-                case "@ERR8@":
-
-                    respDesc = "Unknown Error: Transaction Unsuccessful!";
-
-                    break;
-                case "@ERR9@":
-
-                    respDesc = "Transfer cannot be Executed";
-
-                    break;
-                case "@ERR10@":
-
-                    respDesc = "Invalid Account";
-
-                    break;
-                case "@ERR11@":
-
-                    respDesc = "Invalid Password";
-
-                    break;
-                case "@ERR12@":
-
-                    respDesc = "Invalid Branch";
-
-                    break;
-                case "@ERR13@":
-
-                    respDesc = "Invalid Check Number!";
-
-                    break;
-                case "@ERR14@":
-
-                    respDesc = "Cheque Cashed";
-
-                    break;
-                case "@ERR15@":
-
-                    respDesc = "Invalid Sub Account";
-
-                    break;
-                case "@ERR16@":
-
-                    respDesc = "Invalid Customer number";
-
-                    break;
-                case "@ERR17@":
-
-                    respDesc = "Customer has no PBS Account";
-
-                    break;
-                case "@ERR18@":
-
-                    respDesc = "Request Already Exists";
-
-                    break;
-                case "@ERR19@":
-
-                    respDesc = "Request accepted for further processing";
-
-                    break;
-                case "@ERR20@":
-
-                    respDesc = "Accounts involved do not belong to the same branch";
-
-                    break;
-                case "@ERR21@":
-
-                    respDesc = "Accounts involved do not belong to the same customer";
-
-                    break;
-                case "@ERR22@":
-
-                    respDesc = "Accounts involved are not of the same currency";
-
-                    break;
-                case "@ERR23@":
-
-                    respDesc = "Transfer amount exceeds accounts allowed transfer limit";
-
-                    break;
-                case "@ERR24@":
-
-                    respDesc = "Transfer Amount exceeds Accounts available balance";
-
-                    break;
-                case "@ERR25@":
-
-                    respDesc = "One of the Branches Involved is not on the network";
-
-                    break;
-                case "@ERR26@":
-
-                    respDesc = "No Data Retrieved";
-
-                    break;
-                case "@ERR27@":
-
-                    respDesc = "Not a checking Account";
-
-                    break;
-                case "@ERR28@":
-
-                    respDesc = "Source Account is Dormant";
-
-                    break;
-                case "@ERR29@":
-
-                    respDesc = "Target Account is Dormant";
-
-                    break;
-                case "@ERR30@":
-
-                    respDesc = "Source Account is Closed";
-
-                    break;
-                case "@ERR31@":
-
-                    respDesc = "Target Account is closed";
-
-                    break;
-                case "@ERR32@":
-
-                    respDesc = "External Transactions are not allowed on Source Account";
-
-                    break;
-                case "@ERR33@":
-
-                    respDesc = "External Transactions are not allowed on Target Account";
-
-                    break;
-                case "@ERR-58@":
-
-                    respDesc = "Either the Source or the Target Account Has Restriction";
-
-                    break;
-                case "@ERR5000@":
-
-                    respDesc = "@ERR5000@";
-
-                    break;
-                case "@ERR844@":
-
-                    respDesc = "Cheque is not within customer series";
-
-                    break;
-                case "@ERR845@":
-
-                    respDesc = "Cheque Has Been Processed Before";
-
-                    break;
                 default:
 
-                    respDesc = "Error occurred: Transaction Unsuccessful!";
+                    cipherMode = CipherMode.CBC;
 
                     break;
             }
 
-            return respDesc;
+            return cipherMode;
         }
+
+        public static int GetKeySize(int keySizeCode)
+        {
+            int keySize;
+
+            switch (keySizeCode)
+            {
+                case AES_KeySize_128:
+
+                    keySize = 128;
+
+                    break;
+
+                case AES_KeySize_256:
+
+                    keySize = 256;
+
+                    break;
+
+                default:
+
+                    keySize = 128;
+
+                    break;
+            }
+
+            return keySize;
+        }
+        #endregion
+
+        //SHA ENCRYPTION ALGORITHMS
+        #region SHA Encryption Algorithms
+        public const string SHA_Algorithm_256 = "SHA256";
+        public const string SHA_Algorithm_512 = "SHA512";
+        #endregion
     }
 }

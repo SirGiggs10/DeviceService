@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DeviceService.Core.Helpers.Common;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -12,8 +13,8 @@ namespace DeviceService.Core.Helpers.Encryption.EncryptionUtility
     /// </summary>
     public static class AES
     {
+        #region AES Old Implementation
         public static Exception Exception;
-
         #region Salt Encryption
         /// <summary>
         /// Encrypt a String with Respect to a Selected Salt Key
@@ -215,6 +216,194 @@ namespace DeviceService.Core.Helpers.Encryption.EncryptionUtility
                 return null;
             }
         }
+        #endregion
+        #endregion
+
+
+        #region AES New Implementation
+        public static byte[] EncryptNew(string plainText, byte[] Key, byte[] IV)
+        {
+            byte[] encrypted;
+            // Create a new AesManaged.    
+            using (AesManaged aes = new AesManaged())
+            {
+                aes.BlockSize = 128;
+                aes.KeySize = 128;
+                aes.Key = Key;
+                aes.IV = IV;
+                aes.Mode = CipherMode.CBC;
+                // Create encryptor    
+                ICryptoTransform encryptor = aes.CreateDecryptor(aes.Key, aes.IV);
+                // Create MemoryStream    
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    // Create crypto stream using the CryptoStream class. This class is the key to encryption    
+                    // and encrypts and decrypts data from any given stream. In this case, we will pass a memory stream    
+                    // to encrypt    
+                    using (CryptoStream cs = new CryptoStream(ms, encryptor, CryptoStreamMode.Write))
+                    {
+                        //byte[] c;
+                        //cs.Write(c = Encoding.UTF8.GetBytes(plainText), 0, c.Length);
+                        // Create StreamWriter and write data to a stream    
+                        using (StreamWriter sw = new StreamWriter(cs))
+                            sw.Write(plainText);
+                        encrypted = ms.ToArray();
+                    }
+                }
+            }
+            // Return encrypted data
+            return encrypted;
+        }
+        public static string DecryptNew(byte[] cipherText, byte[] Key, byte[] IV)
+        {
+            string plaintext = null;
+            // Create AesManaged    
+            using (AesManaged aes = new AesManaged())
+            {
+                // Create a decryptor    
+                ICryptoTransform decryptor = aes.CreateDecryptor(Key, IV);
+                // Create the streams used for decryption.    
+                using (MemoryStream ms = new MemoryStream(cipherText))
+                {
+                    // Create crypto stream    
+                    using (CryptoStream cs = new CryptoStream(ms, decryptor, CryptoStreamMode.Read))
+                    {
+                        // Read crypto stream    
+                        using (StreamReader reader = new StreamReader(cs))
+                            plaintext = reader.ReadToEnd();
+                    }
+                }
+            }
+            return plaintext;
+        }
+
+        public static byte[] EncryptStringToBytes(string plainText, byte[] key, byte[] IV, CipherMode cipherMode = CipherMode.CBC, int keySize = 128)
+        {
+            // Check arguments. 
+            if (plainText == null || plainText.Length <= 0)
+                throw new ArgumentNullException("plainText");
+            if (key == null || key.Length <= 0)
+                throw new ArgumentNullException("Key");
+            if (IV == null || IV.Length <= 0)
+                throw new ArgumentNullException("IV");
+
+            byte[] encrypted;
+            // Create an RijndaelManaged object 
+            // with the specified key and IV. 
+            using (RijndaelManaged rijAlg = new RijndaelManaged())
+            {
+                rijAlg.Mode = cipherMode;
+                rijAlg.KeySize = keySize;
+                rijAlg.Key = key;
+                rijAlg.IV = IV;
+
+                // Create a decryptor to perform the stream transform.
+                ICryptoTransform encryptor = rijAlg.CreateEncryptor(rijAlg.Key, rijAlg.IV);
+
+                // Create the streams used for encryption. 
+                using (MemoryStream msEncrypt = new MemoryStream())
+                {
+                    using (CryptoStream csEncrypt = new CryptoStream(msEncrypt, encryptor, CryptoStreamMode.Write))
+                    {
+                        using (StreamWriter swEncrypt = new StreamWriter(csEncrypt))
+                        {
+
+                            //Write all data to the stream.
+                            swEncrypt.Write(plainText);
+                        }
+
+                        encrypted = msEncrypt.ToArray();
+                    }
+                }
+            }
+
+            // Return the encrypted bytes from the memory stream. 
+            return encrypted;
+        }
+
+        public static string DecryptStringFromBytes(byte[] cipherText, byte[] Key, byte[] IV, CipherMode cipherMode = CipherMode.CBC, int keySize = 128)
+        {
+            // Check arguments. 
+            if (cipherText == null || cipherText.Length <= 0)
+                throw new ArgumentNullException("cipherText");
+            if (Key == null || Key.Length <= 0)
+                throw new ArgumentNullException("Key");
+            if (IV == null || IV.Length <= 0)
+                throw new ArgumentNullException("IV");
+
+            // Declare the string used to hold 
+            // the decrypted text. 
+            string plaintext = null;
+
+            // Create an RijndaelManaged object 
+            // with the specified key and IV. 
+            using (RijndaelManaged rijAlg = new RijndaelManaged())
+            {
+                rijAlg.KeySize = keySize;
+                rijAlg.Mode = cipherMode;
+                rijAlg.Key = Key;
+                rijAlg.IV = IV;
+
+                // Create a decrytor to perform the stream transform.
+                ICryptoTransform decryptor = rijAlg.CreateDecryptor(rijAlg.Key, rijAlg.IV);
+
+                // Create the streams used for decryption. 
+                using (MemoryStream msDecrypt = new MemoryStream(cipherText))
+                {
+                    using (CryptoStream csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read))
+                    {
+                        using (StreamReader srDecrypt = new StreamReader(csDecrypt))
+                        {
+                            // Read the decrypted bytes from the decrypting stream 
+                            // and place them in a string.
+                            plaintext = srDecrypt.ReadToEnd();
+                        }
+                    }
+                }
+            }
+
+            return plaintext;
+        }
+
+        #region AES Encrypt Text
+        public static string AES_EncryptText(string textToEncrypt, string aesKey, string aesIV, int aesCipherMode = Utils.AES_Mode_Default, int aesKeySize = Utils.AES_KeySize_Default, int aesReturnType = Utils.AES_ReturnType_Default)
+        {
+            try
+            {
+                var cipherMode = Utils.GetCipherMode(aesCipherMode);
+                var keySize = Utils.GetKeySize(aesKeySize);
+
+                var encryptedTextBytes = EncryptStringToBytes(textToEncrypt, Encoding.UTF8.GetBytes(aesKey), Encoding.UTF8.GetBytes(aesIV), cipherMode, keySize);
+
+                return (aesReturnType == Utils.AES_ReturnType_Base64) ? HelperUtility.StringBytesToBase64(encryptedTextBytes) : HelperUtility.StringBytesToHex(encryptedTextBytes, true);
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+        #endregion
+
+        #region AES Decrypt Text
+        public static string AES_DecryptText(string textToDecrypt, string aesKey, string aesIV, int aesCipherMode = Utils.AES_Mode_Default, int aesKeySize = Utils.AES_KeySize_Default, int aesReturnType = Utils.AES_ReturnType_Default)
+        {
+            try
+            {
+                var cipherMode = Utils.GetCipherMode(aesCipherMode);
+                var keySize = Utils.GetKeySize(aesKeySize);
+                var textToDecryptBytes = (aesReturnType == Utils.AES_ReturnType_Base64) ? HelperUtility.Base64ToStringBytes(textToDecrypt) : HelperUtility.HexToStringBytes(textToDecrypt);
+
+                var decryptedText = DecryptStringFromBytes(textToDecryptBytes, Encoding.UTF8.GetBytes(aesKey), Encoding.UTF8.GetBytes(aesIV), cipherMode, keySize);
+
+                return decryptedText;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+        #endregion
+
         #endregion
     }
 }

@@ -1,4 +1,5 @@
 ﻿using DeviceService.Core.Dtos.Global;
+using DeviceService.Core.Helpers.Extensions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 using System;
@@ -6,7 +7,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Text;
 
-namespace CBN_eNaira.Core.Helpers.Common
+namespace DeviceService.Core.Helpers.Common
 {
     public static class HelperUtility
     {
@@ -201,6 +202,39 @@ namespace CBN_eNaira.Core.Helpers.Common
             }
 
             return functionReturnValue;
+        }
+
+        public static string StringBytesToHex(byte[] stringBytes, bool stripHyphen)
+        {
+            var hexStringVal = BitConverter.ToString(stringBytes);
+
+            return stripHyphen ? StripHyphenFromHexString(hexStringVal) : hexStringVal;
+        }
+
+        private static string StripHyphenFromHexString(string hexString)
+        {
+            return hexString.Replace("-", "");
+        }
+
+        public static byte[] HexToStringBytes(string hexStringVal)
+        {
+            var stringBytes = hexStringVal.ToBytes();
+
+            return stringBytes;
+        }
+
+        public static string StringBytesToBase64(byte[] stringBytes)
+        {
+            var base64StringVal = Convert.ToBase64String(stringBytes);
+
+            return base64StringVal;
+        }
+
+        public static byte[] Base64ToStringBytes(string base64String)
+        {
+            var stringBytes = Convert.FromBase64String(base64String);
+
+            return stringBytes;
         }
     }
 }

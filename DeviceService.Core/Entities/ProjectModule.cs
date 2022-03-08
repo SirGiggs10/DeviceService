@@ -5,19 +5,15 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Ayuda_Help_Desk.Models
+namespace DeviceService.Core.Entities
 {
     public class ProjectModule
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public Guid Id { get; set; }
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ProjectModuleId { get; set; }
         public string ProjectModuleName { get; set; }
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public DateTimeOffset CreatedAt { get; set; }
-        public DateTimeOffset? DeletedAt { get; set; }
+        public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.Now;
 
         public virtual List<Functionality> Functionalities { get; set; }
     }

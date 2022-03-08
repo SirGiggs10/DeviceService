@@ -5,12 +5,10 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Ayuda_Help_Desk.Models
+namespace DeviceService.Core.Entities
 {
     public class AuditReportActivity
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public Guid Id { get; set; }
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key]
         public int AuditReportActivityId { get; set; }
@@ -19,9 +17,7 @@ namespace Ayuda_Help_Desk.Models
         public string AuditReportActivityDescription { get; set; }
         public string AuditReportActivityViewUrl { get; set; }
         public string FrontendRoute { get; set; }
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public DateTimeOffset CreatedAt { get; set; }
-        public DateTimeOffset? DeletedAt { get; set; }
+        public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.Now;
 
         public virtual List<AuditReport> AuditReports { get; set; }
         public virtual Functionality Functionality { get; set; }

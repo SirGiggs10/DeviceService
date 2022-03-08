@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace DeviceService.Dtos.AuditReportActivity
+namespace DeviceService.Core.Dtos.AuditReportActivity
 {
     public class AuditReportActivityResponse
     {

@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Ayuda_Help_Desk.Models
+namespace DeviceService.Core.Entities
 {
     public class User : IdentityUser<int>
     {
@@ -13,13 +13,13 @@ namespace Ayuda_Help_Desk.Models
         public bool Deleted { get; set; }
         public string ShortToken { get; set; }
         public string LongToken { get; set; }
-        //public string FullName { get; set; }
+        public string FullName { get; set; }
+        public string Address { get; set; }
+        public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.Now;
         public DateTimeOffset? LastLoginDateTime { get; set; }
         public DateTimeOffset? SecondToLastLoginDateTime { get; set; }
 
         public virtual List<UserRole> UserRoles { get; set; }
-        public virtual Staff Staff { get; set; }
-        public virtual Customer Customer { get; set; }
         public virtual List<AuditReport> AuditReports { get; set; }
     }
 }

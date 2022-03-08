@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace DeviceService.Dtos.Cloudinary
+namespace DeviceService.Core.Dtos.Cloudinary
 {
     public class RawUploadResultWithFileName
     {

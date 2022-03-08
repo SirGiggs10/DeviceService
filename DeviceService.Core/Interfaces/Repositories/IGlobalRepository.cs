@@ -1,12 +1,10 @@
-﻿using Ayuda_Help_Desk.Data;
-using Ayuda_Help_Desk.Dtos;
-using Ayuda_Help_Desk.Dtos.General;
+﻿using DeviceService.Core.Dtos.Global;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Ayuda_Help_Desk.Interfaces
+namespace DeviceService.Core.Interfaces.Repositories
 {
     public interface IGlobalRepository
     {
@@ -20,8 +18,5 @@ namespace Ayuda_Help_Desk.Interfaces
         public Task<TEntity> Get<TEntity>(int id) where TEntity : class;
         public Task<List<TEntity>> Get<TEntity>() where TEntity : class;
         public LoggedInUserInfo GetUserInformation();
-        public string GetMailBodyTemplate(string recipientFirstName, string recipientLastName, string link, string message1, string message2, string templateSrc);
-        public Task<ReturnResponse> GetModuleFileLink(string moduleName);
-        public Task<ReturnResponse> ExportModuleFile(string moduleType);
     }
 }

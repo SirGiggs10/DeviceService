@@ -1,11 +1,8 @@
 ﻿using AutoMapper;
-using Ayuda_Help_Desk.Data;
-using Ayuda_Help_Desk.Dtos.Auth;
-using Ayuda_Help_Desk.Dtos.General;
-using Ayuda_Help_Desk.Dtos.RoleFunctionality;
-using Ayuda_Help_Desk.Helpers;
-using Ayuda_Help_Desk.Interfaces;
-using Ayuda_Help_Desk.Models;
+using DeviceService.Core.Data.DataContext;
+using DeviceService.Core.Dtos.Global;
+using DeviceService.Core.Helpers.Common;
+using DeviceService.Core.Interfaces.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -13,17 +10,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Ayuda_Help_Desk.Repositories
+namespace DeviceService.Core.Repositories
 {
     public class RoleManagementRepository : IRoleManagementRepository
     {
         private readonly RoleManager<Role> _roleManager;
-        private readonly DataContext _dataContext;
+        private readonly DeviceContext _dataContext;
         private readonly IGlobalRepository _globalRepository;
         private readonly IMapper _mapper;
         private readonly UserManager<User> _userManager;
 
-        public RoleManagementRepository(RoleManager<Role> roleManager, DataContext dataContext, IGlobalRepository globalRepository, IMapper mapper, UserManager<User> userManager)
+        public RoleManagementRepository(RoleManager<Role> roleManager, DeviceContext dataContext, IGlobalRepository globalRepository, IMapper mapper, UserManager<User> userManager)
         {
             _roleManager = roleManager;
             _dataContext = dataContext;

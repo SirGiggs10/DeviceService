@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Ayuda_Help_Desk.Models
+namespace DeviceService.Core.Entities
 {
     public class UserRole : IdentityUserRole<int>
     {

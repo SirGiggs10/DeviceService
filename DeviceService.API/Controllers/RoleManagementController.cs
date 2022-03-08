@@ -3,19 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using Ayuda_Help_Desk.Data;
-using Ayuda_Help_Desk.Dtos.AuditReport;
-using Ayuda_Help_Desk.Dtos.General;
 using Ayuda_Help_Desk.Dtos.RoleFunctionality;
-using Ayuda_Help_Desk.Dtos.UserManagement;
 using Ayuda_Help_Desk.Helpers;
 using Ayuda_Help_Desk.Interfaces;
 using Ayuda_Help_Desk.Models;
+using DeviceService.Core.Data.DataContext;
+using DeviceService.Core.Helpers.Common;
+using DeviceService.Core.Helpers.RoleBasedAccess;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Ayuda_Help_Desk.Controllers
+namespace DeviceService.Controllers
 {
     [AllowAnonymous]
     [Route("api/[controller]")]
@@ -24,10 +23,10 @@ namespace Ayuda_Help_Desk.Controllers
     {
         private readonly IRoleManagementRepository _roleManagementRepository;
         private readonly IMapper _mapper;
-        private readonly DataContext _dataContext;
+        private readonly DeviceContext _dataContext;
         private readonly IAuditReportRepository _auditReportRepository;
 
-        public RoleManagementController(IRoleManagementRepository roleManagementRepository, IMapper mapper, DataContext dataContext, IAuditReportRepository auditReportRepository)
+        public RoleManagementController(IRoleManagementRepository roleManagementRepository, IMapper mapper, DeviceContext dataContext, IAuditReportRepository auditReportRepository)
         {
             _roleManagementRepository = roleManagementRepository;
             _mapper = mapper;
@@ -291,44 +290,6 @@ namespace Ayuda_Help_Desk.Controllers
             {
                 await dbTransaction.RollbackAsync();
 
-                return StatusCode(StatusCodes.Status400BadRequest, result);
-            }
-        }
-
-        /// <summary>
-        /// GET ALL THE STAFF USER ROLES IN THE SYSTEM
-        /// </summary>
-        [RequiredFunctionalityName("GetStaffUsersRoles")]
-        [HttpGet("Users/Roles")]
-        public async Task<ActionResult> GetStaffUsersRoles([FromQuery] UserParams userParams)
-        {
-            var result = await _roleManagementRepository.GetStaffUsersRoles(userParams);
-
-            if (result.StatusCode == Utils.Success)
-            {
-                var staffUsersRoles = (PagedList<UserRole>)result.ObjectValue;
-                result.ObjectValue = _mapper.Map<List<StaffUserRoleResponse>>(staffUsersRoles.ToList());
-                Response.AddPagination(staffUsersRoles.CurrentPage, staffUsersRoles.PageSize, staffUsersRoles.TotalCount, staffUsersRoles.TotalPages);
-                //AUDIT THIS ACTIVITY FOR THE USER
-                var auditResult = await _auditReportRepository.CreateAuditReport(new AuditReportRequest()
-                {
-                    AuditReportActivityFunctionalityName = "GetStaffUsersRoles",
-                    AuditReportActivityResourceId = new List<int>() { }
-                });
-
-                if (auditResult.StatusCode != Utils.Success)
-                {
-                    return StatusCode(StatusCodes.Status400BadRequest, new ReturnResponse()
-                    {
-                        StatusCode = Utils.AuditReportError,
-                        StatusMessage = Utils.StatusMessageAuditReportError
-                    });
-                }
-
-                return StatusCode(StatusCodes.Status200OK, result.ObjectValue);
-            }
-            else
-            {
                 return StatusCode(StatusCodes.Status400BadRequest, result);
             }
         }
@@ -652,6 +613,46 @@ namespace Ayuda_Help_Desk.Controllers
             {
                 await dbTransaction.RollbackAsync();
 
+                return StatusCode(StatusCodes.Status400BadRequest, result);
+            }
+        }
+
+        [HttpPost("Functionalities/Roles/Assign")]
+        public async Task<ActionResult> PostAssignRolesToFunctionality(List<RoleFunctionalityAssignmentRequest> roleFunctionalityAssignmentRequest)
+        {
+            var result = await _userManagementRepository.AssignRolesToFunctionality(roleFunctionalityAssignmentRequest);
+
+            if (result.StatusCode == Status.Success)
+            {
+                result.ObjectValue = _mapper.Map<List<FunctionalityRoleResponse>>(((List<FunctionalityRole>)result.ObjectValue));
+                return StatusCode(StatusCodes.Status200OK, result.ObjectValue);
+            }
+            else if (result.StatusCode == Status.NotFound)
+            {
+                return StatusCode(StatusCodes.Status404NotFound, result);
+            }
+            else
+            {
+                return StatusCode(StatusCodes.Status400BadRequest, result);
+            }
+        }
+
+        [HttpGet("Functionalities/Roles")]
+        public async Task<ActionResult> GetFunctionalitiesRoles()
+        {
+            var result = await _userManagementRepository.GetFunctionalitiesRoles();
+
+            if (result.StatusCode == Status.Success)
+            {
+                result.ObjectValue = _mapper.Map<List<FunctionalityRoleResponse>>(((List<FunctionalityRole>)result.ObjectValue));
+                return StatusCode(StatusCodes.Status200OK, result.ObjectValue);
+            }
+            else if (result.StatusCode == Status.NotFound)
+            {
+                return StatusCode(StatusCodes.Status404NotFound, result);
+            }
+            else
+            {
                 return StatusCode(StatusCodes.Status400BadRequest, result);
             }
         }

@@ -8,6 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using DeviceService.Core.Helpers.Common;
+using DeviceService.Core.Data.DataContext;
+using DeviceService.Core.Helpers.RoleBasedAccess;
 
 namespace DeviceService.Controllers
 {
@@ -16,7 +18,7 @@ namespace DeviceService.Controllers
     [ApiController]
     public class AuditReportActivitiesController : ControllerBase
     {
-        private readonly DataContext _dataContext;
+        private readonly DeviceContext _dataContext;
         private readonly IAuditReportActivityRepository _auditReportActivityRepository;
         private readonly IMapper _mapper;
         private readonly IAuditReportRepository _auditReportRepository;

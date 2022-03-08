@@ -96,8 +96,10 @@ namespace DeviceService.Core.Helpers.Common
         public const string StatusMessage_CBNENairaEndpoint_DatabaseConnectionError = "System Malfunction";
 
         //USER TYPES
-        public const int AdministratorUser = 1;
-        public const int NormalUser = 2;
+        public const int UserType_User = 1;
+
+        //USER ROLES
+        public const string Role_Administrator = "";
 
         //CUSTOM APPLICATION USER CLAIM TYPES
         public const string ClaimType_UserType = "UserType";

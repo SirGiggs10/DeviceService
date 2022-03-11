@@ -1,12 +1,12 @@
-﻿using Ayuda_Help_Desk.Dtos.AuditReport;
-using Ayuda_Help_Desk.Dtos.General;
-using Ayuda_Help_Desk.Helpers;
+﻿using DeviceService.Core.Dtos.AuditReport;
+using DeviceService.Core.Dtos.Global;
+using DeviceService.Core.Helpers.Pagination;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Ayuda_Help_Desk.Interfaces
+namespace DeviceService.Core.Interfaces.Repositories
 {
     public interface IAuditReportRepository
     {

@@ -11,5 +11,6 @@ namespace DeviceService.Core.Helpers.ConfigurationSettings.ConfigManager
     {
         public static ConnectionStrings ConnectionString => ConfigurationSettingsHelper.GetConfigurationSectionObject<ConnectionStrings>("ConnectionString");
         public static AppSetting AppSetting => ConfigurationSettingsHelper.GetConfigurationSectionObject<AppSetting>("AppSetting");
+        public static AES_Encryption_Credentials AES_Encryption_Credentials => ConfigurationSettingsHelper.GetConfigurationSectionObject<AES_Encryption_Credentials>("AES_Encryption_Credentials");
     }
 }

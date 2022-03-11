@@ -12,7 +12,6 @@ namespace DeviceService.Core.Entities
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int DeviceOperationId { get; set; }
         public string DeviceOperationName { get; set; }
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.Now;
 
         public virtual List<DeviceTypeOperation> DeviceTypeOperations { get; set; }

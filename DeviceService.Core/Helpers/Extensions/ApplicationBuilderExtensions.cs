@@ -14,5 +14,12 @@ namespace DeviceService.Core.Helpers.Extensions
 
             return app;
         }
+
+        public static IApplicationBuilder AddCustomExceptionHandlerMiddleware(this IApplicationBuilder app)
+        {
+            app.UseMiddleware<ExceptionMiddleware>();
+
+            return app;
+        }
     }
 }

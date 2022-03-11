@@ -6,6 +6,6 @@ namespace DeviceService.Core.Helpers.ConfigurationSettings.AppSettings
 {
     public class AppSetting
     {
-        public int EncryptionKeySize { get; set; }
+        public string Secret { get; set; }
     }
 }

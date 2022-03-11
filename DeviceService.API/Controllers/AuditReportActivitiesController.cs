@@ -10,6 +10,11 @@ using Microsoft.AspNetCore.Authorization;
 using DeviceService.Core.Helpers.Common;
 using DeviceService.Core.Data.DataContext;
 using DeviceService.Core.Helpers.RoleBasedAccess;
+using DeviceService.Core.Interfaces.Repositories;
+using DeviceService.Core.Dtos.Global;
+using DeviceService.Core.Dtos.AuditReportActivity;
+using DeviceService.Core.Entities;
+using DeviceService.Core.Dtos.AuditReport;
 
 namespace DeviceService.Controllers
 {
@@ -23,7 +28,7 @@ namespace DeviceService.Controllers
         private readonly IMapper _mapper;
         private readonly IAuditReportRepository _auditReportRepository;
 
-        public AuditReportActivitiesController(DataContext dataContext, IAuditReportActivityRepository auditReportActivityRepository, IMapper mapper, IAuditReportRepository auditReportRepository)
+        public AuditReportActivitiesController(DeviceContext dataContext, IAuditReportActivityRepository auditReportActivityRepository, IMapper mapper, IAuditReportRepository auditReportRepository)
         {
             _dataContext = dataContext;
             _auditReportActivityRepository = auditReportActivityRepository;
@@ -32,9 +37,12 @@ namespace DeviceService.Controllers
         }
 
         // GET: api/AuditReportActivities
+        /// <summary>
+        /// GET ALL AUDIT REPORT ACTIVITIES
+        /// </summary>
         [RequiredFunctionalityName("GetAuditReportActivities")]
         [HttpGet]
-        public async Task<ActionResult<ControllerReturnResponse>> GetAuditReportActivity()
+        public async Task<ActionResult<ReturnResponse>> GetAuditReportActivity()
         {
             var result = await _auditReportActivityRepository.GetAuditReportActivity();
 
@@ -66,6 +74,9 @@ namespace DeviceService.Controllers
         }
 
         // GET: api/AuditReportActivities/5
+        /// <summary>
+        /// GET AUDIT REPORT ACTIVITY BY ID
+        /// </summary>
         [RequiredFunctionalityName("GetAuditReportActivity")]
         [HttpGet("{id}")]
         public async Task<ActionResult<ReturnResponse>> GetAuditReportActivity(int id)
@@ -101,6 +112,9 @@ namespace DeviceService.Controllers
         }
 
         // PUT: api/AuditReportActivities/5
+        /// <summary>
+        /// UPDATE AUDIT REPORT ACTIVITY
+        /// </summary>
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [RequiredFunctionalityName("PutAuditReportActivity")]
@@ -145,6 +159,9 @@ namespace DeviceService.Controllers
         }
 
         // POST: api/AuditReportActivities
+        /// <summary>
+        /// CREATE AUDIT REPORT ACTIVITY
+        /// </summary>
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [RequiredFunctionalityName("PostAuditReportActivity")]
@@ -189,6 +206,9 @@ namespace DeviceService.Controllers
         }
 
         // DELETE: api/AuditReportActivities/Delete
+        /// <summary>
+        /// DELETE AUDIT REPORT ACTIVITIES
+        /// </summary>
         [RequiredFunctionalityName("DeleteAuditReportActivity")]
         [HttpPost("Delete")]
         public async Task<ActionResult<ReturnResponse>> DeleteAuditReportActivity([FromBody] List<int> auditReportActivitiesIds)

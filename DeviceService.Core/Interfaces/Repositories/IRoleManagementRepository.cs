@@ -1,13 +1,13 @@
-﻿using Ayuda_Help_Desk.Dtos.General;
-using Ayuda_Help_Desk.Dtos.RoleFunctionality;
-using Ayuda_Help_Desk.Helpers;
-using Ayuda_Help_Desk.Models;
+﻿using DeviceService.Core.Dtos.Global;
+using DeviceService.Core.Dtos.RoleFunctionality;
+using DeviceService.Core.Entities;
+using DeviceService.Core.Helpers.Pagination;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Ayuda_Help_Desk.Interfaces
+namespace DeviceService.Core.Interfaces.Repositories
 {
     public interface IRoleManagementRepository
     {
@@ -17,7 +17,7 @@ namespace Ayuda_Help_Desk.Interfaces
         public Task<ReturnResponse> UpdateRoles(List<RoleResponse> roles);
         public Task<ReturnResponse> DeleteRoles(List<RoleResponse> roles);
         public Task<ReturnResponse> AssignRolesToUser(RoleUserAssignmentRequest roleAssignmentRequest);
-        public Task<ReturnResponse> GetStaffUsersRoles(UserParams userParams);
+        public Task<ReturnResponse> GetUsersRoles(UserParams userParams);
         public Task<ReturnResponse> CreateProjectModule(List<ProjectModule> projectModules);
         public Task<ReturnResponse> GetProjectModules(UserParams userParams);
         public Task<ReturnResponse> GetProjectModules(int projectModuleId);
@@ -26,5 +26,7 @@ namespace Ayuda_Help_Desk.Interfaces
         public Task<ReturnResponse> GetFunctionalities(UserParams userParams);
         public Task<ReturnResponse> GetFunctionalities(int functionalityId);
         public Task<ReturnResponse> DeleteFunctionality(List<FunctionalityResponse> functionalities);
+        public Task<ReturnResponse> AssignRolesToFunctionality(List<RoleFunctionalityAssignmentRequest> roleFunctionalityAssignmentRequest);
+        public Task<ReturnResponse> GetFunctionalitiesRoles(UserParams userParams);
     }
 }

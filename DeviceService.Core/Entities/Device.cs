@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DeviceService.Core.Helpers.Common;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -14,11 +15,15 @@ namespace DeviceService.Core.Entities
         public string DeviceName { get; set; }
         public int UserId { get; set; }
         public int DeviceTypeId { get; set; }
-        public int Status { get; set; }
-        public double Temperature { get; set; }
-        public int TotalUpTimeInHours { get; set; }
+        public string Status { get; set; } = Utils.DeviceStatus.Offline.ToString();
+        public double Temperature { get; set; } = 0;
+        public int TotalUsageTimeInHours { get; set; } = 0;
+        public string DeviceIconPublicId { get; set; }
+        public string DeviceIconUrl { get; set; }
+        public string DeviceIconFileName { get; set; }
         public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.Now;
 
         public virtual DeviceType DeviceType { get; set; }
+        public virtual User User { get; set; }
     }
 }

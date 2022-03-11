@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
-using Ayuda_Help_Desk.Data;
-using Ayuda_Help_Desk.Dtos.AuditReport;
-using Ayuda_Help_Desk.Dtos.General;
-using Ayuda_Help_Desk.Helpers;
-using Ayuda_Help_Desk.Interfaces;
-using Ayuda_Help_Desk.Models;
+using DeviceService.Core.Data.DataContext;
+using DeviceService.Core.Dtos.AuditReport;
+using DeviceService.Core.Dtos.Global;
+using DeviceService.Core.Entities;
+using DeviceService.Core.Helpers.Common;
+using DeviceService.Core.Helpers.Extensions;
+using DeviceService.Core.Helpers.Pagination;
+using DeviceService.Core.Interfaces.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -15,17 +17,17 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
-namespace Ayuda_Help_Desk.Repositories
+namespace DeviceService.Core.Repositories
 {
     public class AuditReportRepository : IAuditReportRepository
     {
         private readonly IGlobalRepository _globalRepository;
-        private readonly DataContext _dataContext;
+        private readonly DeviceContext _dataContext;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IMapper _mapper;
         private readonly UserManager<User> _userManager;
 
-        public AuditReportRepository(IGlobalRepository globalRepository, DataContext dataContext, IHttpContextAccessor httpContextAccessor, IMapper mapper, UserManager<User> userManager)
+        public AuditReportRepository(IGlobalRepository globalRepository, DeviceContext dataContext, IHttpContextAccessor httpContextAccessor, IMapper mapper, UserManager<User> userManager)
         {
             _globalRepository = globalRepository;
             _dataContext = dataContext;
@@ -66,7 +68,7 @@ namespace Ayuda_Help_Desk.Repositories
                 var userTypeVal = Convert.ToInt32(userType.Value);
                 userIdVal = Convert.ToInt32(userId.Value);
 
-                if ((userTypeVal != Utils.Staff) && (userTypeVal != Utils.Customer))
+                if (userTypeVal != Utils.UserType_User)
                 {
                     return new ReturnResponse()
                     {
@@ -166,11 +168,11 @@ namespace Ayuda_Help_Desk.Repositories
                     };
                 }
 
-                auditReport.DeletedAt = DateTimeOffset.Now;
+                //auditReport.DeletedAt = DateTimeOffset.Now;
                 auditReportsToDelete.Add(auditReport);
             }
 
-            var deletionResult = _globalRepository.Update(auditReportsToDelete);
+            var deletionResult = _globalRepository.Delete(auditReportsToDelete);
             if(!deletionResult)
             {
                 return new ReturnResponse()
@@ -240,7 +242,7 @@ namespace Ayuda_Help_Desk.Repositories
             }
 
             var userTypeVal = Convert.ToInt32(userType.Value);
-            if(userTypeVal != Utils.Staff)
+            if(userTypeVal != Utils.UserType_User)
             {
                 return new ReturnResponse()
                 {
@@ -256,23 +258,6 @@ namespace Ayuda_Help_Desk.Repositories
                 {
                     StatusCode = Utils.NotFound,
                     StatusMessage = Utils.StatusMessageNotFound
-                };
-            }
-
-            if(userDetails.UserType == Utils.Staff)
-            {
-                var userDetailsProfile = await _dataContext.Staff.Where(a => a.StaffId == userDetails.UserTypeId).FirstOrDefaultAsync();
-            }
-            else if(userDetails.UserType == Utils.Customer)
-            {
-                var userDetailsProfile = await _dataContext.Customer.Where(a => a.CustomerId == userDetails.UserTypeId).FirstOrDefaultAsync();
-            }
-            else
-            {
-                return new ReturnResponse()
-                {
-                    StatusCode = Utils.BadRequest,
-                    StatusMessage = Utils.StatusMessageBadRequest
                 };
             }
 

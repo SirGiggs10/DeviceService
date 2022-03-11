@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DeviceService.Core.Helpers.Encryption.SimpleBasicEncryption;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -11,7 +12,9 @@ namespace DeviceService.Core.Helpers.ConfigurationSettings.AppSettings
         {
             get
             {
-                return GTBEncryptLib.DecryptText(_DeviceDbConnectionString);
+                var decryptedTextObject = SimpleBasicEncryptionUtility.DecryptText(_DeviceDbConnectionString);
+
+                return decryptedTextObject.Item1 ? decryptedTextObject.Item2 : string.Empty;
             }
             set
             {

@@ -1,10 +1,10 @@
-using Ayuda_Help_Desk.API.Helpers;
-using Ayuda_Help_Desk.Dtos.Cloudinary;
-using Ayuda_Help_Desk.Dtos.General;
-using Ayuda_Help_Desk.Helpers;
-using Ayuda_Help_Desk.Interfaces;
 using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
+using DeviceService.Core.Dtos.Cloudinary;
+using DeviceService.Core.Dtos.Global;
+using DeviceService.Core.Helpers.Cloudinary;
+using DeviceService.Core.Helpers.Common;
+using DeviceService.Core.Interfaces.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using System;
@@ -15,7 +15,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 
-namespace Ayuda_Help_Desk.Repositories
+namespace DeviceService.Core.Repositories
 {
     public class CloudinaryRepository : ICloudinaryRepository
     {

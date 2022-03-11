@@ -1,4 +1,6 @@
 ﻿using DeviceService.Core.Helpers.Common;
+using DeviceService.Core.Helpers.ConfigurationSettings.ConfigManager;
+using DeviceService.Core.Helpers.Encryption.EncryptionUtility;
 using Microsoft.Extensions.Primitives;
 using System;
 using System.Collections.Generic;
@@ -30,30 +32,12 @@ namespace DeviceService.Core.Helpers.Attributes
 
             try
             {
-                try
-                {
-                    var stringVal = new StringValues();
-                    var otherProperty = MyHttpContextAccessor.GetHttpContextAccessor().HttpContext.Request.Headers.TryGetValue("Channel", out stringVal);
-                    _Channel = stringVal[0].ToString();
-                    /*var otherProperty = validationContext.ObjectType.GetProperty("Channel");  //WAS RETURNING NULL...CHECK WHY...MAYBE .NET 5. WORKS WELL IN .NET CORE 3.1
-                    _Channel = otherProperty?.GetValue(validationContext.ObjectInstance, null)?.ToString(); //FIXED THE ERROR BY PASSING THE REQUEST HEADER CLASS AS THE FIRST PARAMETER BEFORE THE BODY OBJECT..THIS FIX DIDNT WORK..CHECK LATER*/
-                    
-                    if (string.IsNullOrWhiteSpace(_Channel))
-                    {
-                        throw new Exception();
-                    }
-                }
-                catch (Exception ex)
-                {
-                    return new ValidationResult("Error Encountered. Could not get Channel.");
-                }
-
                 string value1 = value is object ? value.ToString() : "";
 
                 if (!string.IsNullOrWhiteSpace(value1))
                 {
-                    var decryptionKey = 
-                    decryptedVal = EncryptionUtil.RSADecrypt(value.ToString(), _Channel);
+                    var aesCredentials = ConfigSettings.AES_Encryption_Credentials;
+                    decryptedVal = AES.AES_DecryptText(value1, aesCredentials.AES_Key, aesCredentials.AES_IV, Utils.AES_Mode_CBC, Utils.AES_KeySize_128, Utils.AES_ReturnType_Hex);
 
                     if (string.IsNullOrEmpty(decryptedVal) && !string.IsNullOrEmpty(value1))
                     {

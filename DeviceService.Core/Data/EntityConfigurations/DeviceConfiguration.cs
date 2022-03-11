@@ -1,18 +1,34 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Text;
+using DeviceService.Core.Entities;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace DeviceService.Core.Data.EntityConfigurations
 {
-    public class SmartloanRequestLogsConfiguration : IEntityTypeConfiguration<SmartloanRequestLogs>
+    public class DeviceConfiguration : IEntityTypeConfiguration<Device>
     {
-        public void Configure(EntityTypeBuilder<SmartloanRequestLogs> builder)
+        public void Configure(EntityTypeBuilder<Device> builder)
         {
-            builder.HasKey(t => t.Id);
-            builder.Property(t => t.Id).HasColumnName("ID");
-            builder.Property(t => t.CifId).HasColumnName("CIF_ID");
+            builder.HasKey(a => a.DeviceId);
+            builder.Property(a => a.DeviceId).HasColumnName("DeviceId").ValueGeneratedOnAdd().UseIdentityColumn().IsRequired(true);
+            builder.Property(a => a.DeviceName).HasColumnName("DeviceName");
+            builder.Property(a => a.UserId).HasColumnName("UserId");
+            builder.Property(a => a.DeviceTypeId).HasColumnName("DeviceTypeId");
+            builder.Property(a => a.Status).HasColumnName("Status");
+            builder.Property(a => a.Temperature).HasColumnName("Temperature");
+            builder.Property(a => a.TotalUsageTimeInHours).HasColumnName("TotalUsageTimeInHours");
+            builder.Property(a => a.DeviceIconPublicId).HasColumnName("DeviceIconPublicId");
+            builder.Property(a => a.DeviceIconUrl).HasColumnName("DeviceIconUrl");
+            builder.Property(a => a.DeviceIconFileName).HasColumnName("DeviceIconFileName");
+            builder.Property(a => a.CreatedAt).HasColumnName("CreatedAt").IsRequired(true);
 
-            builder.ToTable("MOBILEAPP_SMART_LOAN_LOGS", "EBANKUSER");
+            //builder.ToTable("Device", "DeviceDb");
+            builder.ToTable("Device");
+
+            builder.HasOne(a => a.DeviceType).WithMany(b => b.Devices).HasForeignKey(c => c.DeviceTypeId).IsRequired(true);
+            builder.HasOne(a => a.User).WithMany(b => b.Devices).HasForeignKey(c => c.UserId).IsRequired(true);
         }
     }
 }

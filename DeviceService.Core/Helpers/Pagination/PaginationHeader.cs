@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Ayuda_Help_Desk.Helpers
+namespace DeviceService.Core.Helpers.Pagination
 {
     public class PaginationHeader
     {

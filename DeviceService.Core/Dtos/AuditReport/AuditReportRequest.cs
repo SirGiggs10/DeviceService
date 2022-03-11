@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace DeviceService.Dtos.AuditReport
+namespace DeviceService.Core.Dtos.AuditReport
 {
     public class AuditReportRequest
     {

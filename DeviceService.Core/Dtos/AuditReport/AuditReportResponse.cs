@@ -1,11 +1,10 @@
-﻿using Ayuda_Help_Desk.Dtos.AuditReportActivity;
-using Ayuda_Help_Desk.Dtos.Auth;
+﻿using DeviceService.Core.Dtos.AuditReportActivity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Ayuda_Help_Desk.Dtos.AuditReport
+namespace DeviceService.Core.Dtos.AuditReport
 {
     public class AuditReportResponse
     {

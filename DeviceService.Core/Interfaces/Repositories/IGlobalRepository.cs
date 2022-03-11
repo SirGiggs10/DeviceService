@@ -1,4 +1,5 @@
-﻿using DeviceService.Core.Dtos.Global;
+﻿using DeviceService.Core.Dtos.Auth;
+using DeviceService.Core.Dtos.Global;
 using System;
 using System.Collections.Generic;
 using System.Linq;

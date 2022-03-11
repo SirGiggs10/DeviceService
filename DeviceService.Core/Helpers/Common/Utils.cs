@@ -45,13 +45,6 @@ namespace DeviceService.Core.Helpers.Common
         public const int UserNotAllowed = 41;
         public const int AuditReportError = 42;
 
-        //CBNENaira ENDPOINT STATUS CODES
-        public const int StatusCode_BVNValidationEndpoint_Success = 0;
-        public const int StatusCode_BVNValidationEndpoint_DatabaseConnectionTimeout = 97;  //NOT USED
-        public const int StatusCode_BVNValidationEndpoint_UnknownError = 1;
-        public const int StatusCode_BVNValidationEndpoint_BadRequest = 2;
-        public const int StatusCode_BVNValidationEndpoint_DatabaseConnectionError = 96;
-
         //STATUS MESSAGES
         public const string StatusMessage_Success = "Request Successful.";
         public const string StatusMessage_UnknownError = "Unknown Error Occured while Performing this Action.";
@@ -75,7 +68,7 @@ namespace DeviceService.Core.Helpers.Common
         public const string StatusMessageNotSucceeded = "Action on this Object did not Succeed";
         public const string StatusMessageObjectExists = "Object already Exists";
         public const string StatusMessageBadRequest = "Bad Request";
-        public const string StatusMessageSignInError = "Sign In Error";
+        public const string StatusMessageSignInError = "Incorrect Email Address or Password!!!";
         public const string StatusMessageEmailAlreadyConfirmed = "The Email Address has already been Confirmed by Ayuda";
         public const string StatusMessagePreviousPasswordStorageError = "There was Error Storing Previous Password";
         public const string StatusMessageNewPasswordError = "New Password Error";
@@ -86,20 +79,14 @@ namespace DeviceService.Core.Helpers.Common
         public const string StatusMessageCloudinaryFileUploadError = "An Error Occured While Uploading the File";
         public const string StatusMessageCloudinaryFileDeleteError = "An Error Occured While Deleting the File";
         public const string StatusMessageCloudinaryDeleteError = "An Error Occured while Deleting files from Cloudinary";
-        public const string StatusMessageUserNotAllowed = "User Not Allowed Because He/She doesnt belong to Certain Support Level and Department";
         public const string StatusMessageAuditReportError = "An Error Occured during User Activity Audit";
-
-        //CBNENaira ENDPOINT STATUS MESSAGES
-        public const string StatusMessage_BVNValidationEndpoint_Success = "BVN Validation Successful";
-        public const string StatusMessage_BVNValidationEndpoint_DatabaseConnectionTimeout = "Database Connection Timeout Occured";
-        public const string StatusMessage_BVNValidationEndpoint_UnknownError = "Unable to Validate BVN";
-        public const string StatusMessage_CBNENairaEndpoint_DatabaseConnectionError = "System Malfunction";
 
         //USER TYPES
         public const int UserType_User = 1;
 
         //USER ROLES
-        public const string Role_Administrator = "";
+        public const string Role_Administrator = "Administrator";
+        public const string Role_NormalUser = "NormalUser";
 
         //CUSTOM APPLICATION USER CLAIM TYPES
         public const string ClaimType_UserType = "UserType";
@@ -128,6 +115,9 @@ namespace DeviceService.Core.Helpers.Common
         //APPLICATION HTTP STATUS CODES
         public const int HttpStatusCode_Ok = StatusCodes.Status200OK;
         public const int HttpStatusCode_BadRequest = StatusCodes.Status400BadRequest;
+        public const int HttpStatusCode_Unauthorized = StatusCodes.Status401Unauthorized;
+        public const int HttpStatusCode_Forbidden = StatusCodes.Status403Forbidden;
+        public const int HttpStatusCode_NotFound = StatusCodes.Status404NotFound;
         public const int HttpStatusCode_InternalServer = StatusCodes.Status500InternalServerError;
 
         //API HTTP STATUS CODES
@@ -135,6 +125,7 @@ namespace DeviceService.Core.Helpers.Common
         public const int HttpStatusCode_400 = 400;
         public const int HttpStatusCode_401 = 401;
         public const int HttpStatusCode_403 = 403;
+        public const int HttpStatusCode_404 = 404;
         public const int HttpStatusCode_500 = 500;
 
         //GET HTTP STATUS CODES DESCRIPTION
@@ -150,6 +141,8 @@ namespace DeviceService.Core.Helpers.Common
                     return "Missing Authorization request header or access token is invalid";
                 case HttpStatusCode_403:
                     return "Missing/Invalid Authorization Token";
+                case HttpStatusCode_404:
+                    return "Resource Object Not Found";
                 case HttpStatusCode_500:
                     return "Request processing failed";
                 default:
@@ -246,5 +239,12 @@ namespace DeviceService.Core.Helpers.Common
         public const string SHA_Algorithm_256 = "SHA256";
         public const string SHA_Algorithm_512 = "SHA512";
         #endregion
+
+        //DEVICE STATUS
+        public enum DeviceStatus
+        {
+            Available = 1,
+            Offline = 2
+        }
     }
 }

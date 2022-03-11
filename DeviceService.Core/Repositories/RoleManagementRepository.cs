@@ -1,7 +1,11 @@
 ﻿using AutoMapper;
 using DeviceService.Core.Data.DataContext;
+using DeviceService.Core.Dtos.Auth;
 using DeviceService.Core.Dtos.Global;
+using DeviceService.Core.Dtos.RoleFunctionality;
+using DeviceService.Core.Entities;
 using DeviceService.Core.Helpers.Common;
+using DeviceService.Core.Helpers.Pagination;
 using DeviceService.Core.Interfaces.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -88,164 +92,6 @@ namespace DeviceService.Core.Repositories
 
                 var listOfRolesToAssign = listOfRolesToReturn.Select(a => a.Name);
                 //UPDATE THE USER'S ROLES WITH THIS CURRENT INCOMING ROLES
-                foreach (var roleDett in listOfRolesToAssign)
-                {
-                    //CHECK TO SEE IF ANYBODY HOLDS THAT ROLE (APART FROM AllStaff ROLE)...IF ANY OVERWRITE IT
-                    if (roleDett.Equals(Utils.MdCeoBranchManagerRole, StringComparison.OrdinalIgnoreCase) || roleDett.Equals(Utils.HeadOfDepartmentRole, StringComparison.OrdinalIgnoreCase) || roleDett.Equals(Utils.HeadOfUnitRole, StringComparison.OrdinalIgnoreCase) || roleDett.Equals(Utils.ZonalManagerRole, StringComparison.OrdinalIgnoreCase))
-                    {
-                        var allUsersInRole = await _userManager.GetUsersInRoleAsync(roleDett);
-                        /*if (allUsersInRole != null && allUsersInRole.Any())
-                        {
-                            
-                        }*/
-                        if (roleDett.Equals(Utils.HeadOfDepartmentRole, StringComparison.OrdinalIgnoreCase))
-                        {
-                            var userDept = await _dataContext.Staff.Where(a => a.StaffId == userDetail.UserTypeId).Include(b => b.Department).FirstOrDefaultAsync();
-                            if (userDept == null)
-                            {
-                                return new ReturnResponse()
-                                {
-                                    StatusCode = Utils.NotFound,
-                                    StatusMessage = Utils.StatusMessageNotFound
-                                };
-                            }
-
-                            foreach (var uss in allUsersInRole)
-                            {
-                                var currUserWithRole = await _dataContext.Staff.FindAsync(uss.UserTypeId);
-                                if (currUserWithRole == null)
-                                {
-                                    return new ReturnResponse()
-                                    {
-                                        StatusCode = Utils.NotFound,
-                                        StatusMessage = Utils.StatusMessageNotFound
-                                    };
-                                }
-
-                                if (userDept.DepartmentId == currUserWithRole.DepartmentId)
-                                {
-                                    var fResult = await _userManager.RemoveFromRoleAsync(uss, roleDett);
-                                    if (!fResult.Succeeded)
-                                    {
-                                        return new ReturnResponse()
-                                        {
-                                            StatusCode = Utils.NotSucceeded,
-                                            StatusMessage = Utils.StatusMessageNotSucceeded
-                                        };
-                                    }
-                                }
-                            }
-
-                            //THEN UPDATE DEPARTMENT HEAD OF DEPARTMENT
-                            var departmentToUpdate = userDept.Department;
-                            departmentToUpdate.HeadOfDepartmentStaffId = userDept.StaffId;
-                            _globalRepository.Update(departmentToUpdate);
-                            var deptResult = await _globalRepository.SaveAll();
-                            if (deptResult.HasValue)
-                            {
-                                if (!deptResult.Value)
-                                {
-                                    return new ReturnResponse()
-                                    {
-                                        StatusCode = Utils.SaveNoRowAffected,
-                                        StatusMessage = Utils.StatusMessageSaveNoRowAffected
-                                    };
-                                }
-                            }
-                            else
-                            {
-                                return new ReturnResponse()
-                                {
-                                    StatusCode = Utils.SaveError,
-                                    StatusMessage = Utils.StatusMessageSaveError
-                                };
-                            }
-                        }
-                        else if (roleDett.Equals(Utils.HeadOfUnitRole, StringComparison.OrdinalIgnoreCase))
-                        {
-                            var userUnit = await _dataContext.Staff.Where(a => a.StaffId == userDetail.UserTypeId).Include(b => b.SubUnit).FirstOrDefaultAsync();
-                            if (userUnit == null)
-                            {
-                                return new ReturnResponse()
-                                {
-                                    StatusCode = Utils.NotFound,
-                                    StatusMessage = Utils.StatusMessageNotFound
-                                };
-                            }
-
-                            foreach (var uss in allUsersInRole)
-                            {
-                                var currUserWithRole = await _dataContext.Staff.FindAsync(uss.UserTypeId);
-                                if (currUserWithRole == null)
-                                {
-                                    return new ReturnResponse()
-                                    {
-                                        StatusCode = Utils.NotFound,
-                                        StatusMessage = Utils.StatusMessageNotFound
-                                    };
-                                }
-
-                                if (userUnit.SubUnitId == currUserWithRole.SubUnitId)
-                                {
-                                    var fResult = await _userManager.RemoveFromRoleAsync(uss, roleDett);
-                                    if (!fResult.Succeeded)
-                                    {
-                                        return new ReturnResponse()
-                                        {
-                                            StatusCode = Utils.NotSucceeded,
-                                            StatusMessage = Utils.StatusMessageNotSucceeded
-                                        };
-                                    }
-                                }
-                            }
-
-                            //THEN UPDATE SUBUNIT HEAD OF UNIT
-                            var subUnitToUpdate = userUnit.SubUnit;
-                            subUnitToUpdate.HeadOfUnitStaffId = userUnit.StaffId;
-                            _globalRepository.Update(subUnitToUpdate);
-                            var deptResult = await _globalRepository.SaveAll();
-                            if (deptResult.HasValue)
-                            {
-                                if (!deptResult.Value)
-                                {
-                                    return new ReturnResponse()
-                                    {
-                                        StatusCode = Utils.SaveNoRowAffected,
-                                        StatusMessage = Utils.StatusMessageSaveNoRowAffected
-                                    };
-                                }
-                            }
-                            else
-                            {
-                                return new ReturnResponse()
-                                {
-                                    StatusCode = Utils.SaveError,
-                                    StatusMessage = Utils.StatusMessageSaveError
-                                };
-                            }
-                        }
-                        else if (roleDett.Equals(Utils.ZonalManagerRole, StringComparison.OrdinalIgnoreCase))
-                        {
-                            //TO BE UPDATED LATER AFTER UI HAS BEEN DONE FOR IT
-                        }
-                        else
-                        {
-                            //MD/CEO/BRANCHMANAGER ROLE
-                            foreach (var ur in allUsersInRole)
-                            {
-                                var idResult = await _userManager.RemoveFromRoleAsync(ur, roleDett);
-                                if (!idResult.Succeeded)
-                                {
-                                    return new ReturnResponse()
-                                    {
-                                        StatusCode = Utils.NotSucceeded,
-                                        StatusMessage = Utils.StatusMessageNotSucceeded
-                                    };
-                                }
-                            }
-                        }
-                    }
-                }
 
                 try
                 {
@@ -367,34 +213,7 @@ namespace DeviceService.Core.Repositories
                     StatusMessage = Utils.StatusMessageNotSucceeded
                 };
             }
-            /*
-            var dbTransaction = await _dataContext.Database.BeginTransactionAsync();
-            foreach (var t in projectModules)
-            {
-                _globalRepository.Add(t);
-                var saveVal = await _globalRepository.SaveAll();
-                if (saveVal == null)
-                {
-                    await dbTransaction.RollbackAsync();
-                    return new ReturnResponse()
-                    {
-                        StatusCode = 1
-                    };
-                }
-
-                if (!saveVal.Value)
-                {
-                    await dbTransaction.RollbackAsync();
-                    return new ReturnResponse()
-                    {
-                        StatusCode = 2
-                    };
-                }
-                projectModulesToReturn.Add(t);
-            }
-           
-            await dbTransaction.CommitAsync();
-            */
+            
             var saveResult = await _globalRepository.SaveAll();
             if(saveResult.HasValue)
             {
@@ -436,31 +255,13 @@ namespace DeviceService.Core.Repositories
             var rolesToReturn = new List<Role>();
             foreach (var t in roles)
             {
-                if(t.UserType != Utils.Staff && t.UserType != Utils.Customer)
+                if(t.UserType != Utils.UserType_User)
                 {
                     return new ReturnResponse()
                     {
                         StatusCode = Utils.InvalidUserType,
                         StatusMessage = Utils.StatusMessageInvalidUserType
                     };
-                }
-
-                if(t.UserType == Utils.Staff)
-                {
-                    var supportLevel = await _globalRepository.Get<SupportLevel>(t.SupportLevelId);
-                    if (supportLevel == null)
-                    {
-                        return new ReturnResponse()
-                        {
-                            StatusCode = Utils.NotFound,
-                            StatusMessage = Utils.StatusMessageNotFound
-                        };
-                    }
-                }
-                else
-                {
-                    //CUSTOMER
-                    t.SupportLevelId = Utils.NoSupportLevel;
                 }
 
                 t.RoleName = t.Name;
@@ -643,14 +444,6 @@ namespace DeviceService.Core.Repositories
         public async Task<ReturnResponse> GetFunctionalities(UserParams userParams)
         {
             var functionalities = _dataContext.Functionality;
-            if(functionalities == null || !(await functionalities.AnyAsync()))
-            {
-                return new ReturnResponse()
-                {
-                    StatusCode = Utils.NotFound,
-                    StatusMessage = Utils.StatusMessageNotFound
-                };
-            }
 
             var functionalitiesToReturn = await PagedList<Functionality>.CreateAsync(functionalities, userParams.PageNumber, userParams.PageSize);
 
@@ -686,15 +479,6 @@ namespace DeviceService.Core.Repositories
         {
             var projectModules = _dataContext.ProjectModule.Include(a => a.Functionalities);
 
-            if (projectModules == null || !projectModules.Any())
-            {
-                return new ReturnResponse()
-                {
-                    StatusCode = Utils.NotFound,
-                    StatusMessage = Utils.StatusMessageNotFound
-                };
-            }
-
             var projectModulesToReturn = await PagedList<ProjectModule>.CreateAsync(projectModules, userParams.PageNumber, userParams.PageSize);
 
             return new ReturnResponse()
@@ -727,16 +511,7 @@ namespace DeviceService.Core.Repositories
 
         public async Task<ReturnResponse> GetRoles(UserParams userParams)
         {
-            var roles = _roleManager.Roles.Include(a => a.UserRoles).Include(b => b.SupportLevel);
-
-            if (roles == null || !roles.Any())
-            {
-                return new ReturnResponse()
-                {
-                    StatusCode = Utils.NotFound,
-                    StatusMessage = Utils.StatusMessageNotFound
-                };
-            }
+            var roles = _roleManager.Roles.Include(a => a.UserRoles);
 
             var rolesToReturn = await PagedList<Role>.CreateAsync(roles, userParams.PageNumber, userParams.PageSize);
 
@@ -750,7 +525,7 @@ namespace DeviceService.Core.Repositories
 
         public async Task<ReturnResponse> GetRoles(int id)
         {
-            var role = await _roleManager.Roles.Where(c => c.Id == id).Include(a => a.UserRoles).Include(b => b.SupportLevel).FirstOrDefaultAsync();
+            var role = await _roleManager.Roles.Where(c => c.Id == id).Include(a => a.UserRoles).FirstOrDefaultAsync();
 
             if (role == null)
             {
@@ -769,11 +544,11 @@ namespace DeviceService.Core.Repositories
             };
         }
 
-        public async Task<ReturnResponse> GetStaffUsersRoles(UserParams userParams)
+        public async Task<ReturnResponse> GetUsersRoles(UserParams userParams)
         {
-            var staffUsersRoles = _dataContext.UserRoles.Include(a => a.User).Where(b => b.User.UserType == Utils.Staff).Include(a => a.User).ThenInclude(c => c.Staff).Include(d => d.Role);
+            var usersRoles = _dataContext.UserRoles.Include(a => a.User).Include(d => d.Role);
 
-            if (staffUsersRoles == null || !(await staffUsersRoles.AnyAsync()))
+            if (usersRoles == null || !(await usersRoles.AnyAsync()))
             {
                 return new ReturnResponse()
                 {
@@ -782,12 +557,12 @@ namespace DeviceService.Core.Repositories
                 };
             }
 
-            var staffUsersRolesToReturn = await PagedList<UserRole>.CreateAsync(staffUsersRoles, userParams.PageNumber, userParams.PageSize);
+            var usersRolesToReturn = await PagedList<UserRole>.CreateAsync(usersRoles, userParams.PageNumber, userParams.PageSize);
 
             return new ReturnResponse()
             {
                 StatusCode = Utils.Success,
-                ObjectValue = staffUsersRolesToReturn,
+                ObjectValue = usersRolesToReturn,
                 StatusMessage = Utils.StatusMessageSuccess
             };
         }
@@ -806,22 +581,12 @@ namespace DeviceService.Core.Repositories
             var rolesToReturn = new List<Role>();
             foreach (var t in roles)
             {
-                if (t.UserType != Utils.Staff && t.UserType != Utils.Customer)
+                if (t.UserType != Utils.UserType_User)
                 {
                     return new ReturnResponse()
                     {
                         StatusCode = Utils.InvalidUserType,
                         StatusMessage = Utils.StatusMessageInvalidUserType
-                    };
-                }
-
-                var supportLevel = await _globalRepository.Get<SupportLevel>(t.SupportLevelId);
-                if (supportLevel == null)
-                {
-                    return new ReturnResponse()
-                    {
-                        StatusCode = Utils.NotFound,
-                        StatusMessage = Utils.StatusMessageNotFound
                     };
                 }
 
@@ -840,7 +605,6 @@ namespace DeviceService.Core.Repositories
                 roleDetail.Name = t.Name;
                 roleDetail.RoleDescription = t.RoleDescription;
                 roleDetail.UserType = t.UserType;
-                roleDetail.SupportLevelId = t.SupportLevelId;
                 roleDetail.RoleName = t.Name;
                 roleDetail.ModifiedAt = DateTimeOffset.Now;
 
@@ -865,5 +629,100 @@ namespace DeviceService.Core.Repositories
             };
         }
 
-     }
+        public async Task<ReturnResponse> AssignRolesToFunctionality(List<RoleFunctionalityAssignmentRequest> roleFunctionalityAssignmentRequest)
+        {
+            if (roleFunctionalityAssignmentRequest.Any(a => a.Roles == null) || roleFunctionalityAssignmentRequest.Any(b => b.Functionality == null) || roleFunctionalityAssignmentRequest == null)
+            {
+                return new ReturnResponse()
+                {
+                    StatusCode = Utils.ObjectNull,
+                    StatusMessage = Utils.StatusMessageObjectNull
+                };
+            }
+
+            var functionalityRolesToReturn = new List<FunctionalityRole>();
+
+            foreach (var z in roleFunctionalityAssignmentRequest)
+            {
+                var functionalityDetail = await _globalRepository.Get<Functionality>(z.Functionality.FunctionalityId);
+                if (functionalityDetail == null)
+                {
+                    return new ReturnResponse()
+                    {
+                        StatusCode = Utils.NotFound,
+                        StatusMessage = Utils.StatusMessageNotFound
+                    };
+                }
+
+                foreach (var t in z.Roles)
+                {
+                    var roleDetail = await _roleManager.FindByIdAsync(Convert.ToString(t.Id));
+
+                    if ((await FunctionalityRoleExists(functionalityDetail.FunctionalityName, roleDetail.Name)))
+                    {
+                        return new ReturnResponse()
+                        {
+                            StatusCode = Utils.ObjectExists,
+                            StatusMessage = Utils.StatusMessageObjectExists
+                        };
+                    }
+
+                    var functionalityRoleDetail = new FunctionalityRole()
+                    {
+                        FunctionalityName = functionalityDetail.FunctionalityName,
+                        RoleId = roleDetail.Id,
+                        RoleName = roleDetail.Name
+                    };
+                    _globalRepository.Add(functionalityRoleDetail);
+
+                    var saveVal = await _globalRepository.SaveAll();
+                    if (saveVal == null)
+                    {
+                        return new ReturnResponse()
+                        {
+                            StatusCode = Utils.SaveError,
+                            StatusMessage = Utils.StatusMessageSaveError
+                        };
+                    }
+
+                    if (!saveVal.Value)
+                    {
+                        return new ReturnResponse()
+                        {
+                            StatusCode = Utils.SaveNoRowAffected,
+                            StatusMessage = Utils.StatusMessageSaveNoRowAffected
+                        };
+                    }
+
+                    functionalityRolesToReturn.Add(functionalityRoleDetail);
+                }
+            }
+
+            return new ReturnResponse()
+            {
+                StatusCode = Utils.Success,
+                StatusMessage = Utils.StatusMessageSuccess,
+                ObjectValue = functionalityRolesToReturn
+            };
+        }
+
+        public async Task<ReturnResponse> GetFunctionalitiesRoles(UserParams userParams)
+        {
+            var functionalitiesRoles = _dataContext.FunctionalityRole;
+
+            var functionalityRolesToReturn = await PagedList<FunctionalityRole>.CreateAsync(functionalitiesRoles, userParams.PageNumber, userParams.PageSize);
+
+            return new ReturnResponse()
+            {
+                StatusCode = Utils.Success,
+                ObjectValue = functionalityRolesToReturn,
+                StatusMessage = Utils.StatusMessageSuccess
+            };
+        }
+
+        private async Task<bool> FunctionalityRoleExists(string functionalityName, string roleName)
+        {
+            return (await _dataContext.FunctionalityRole.AnyAsync(a => (a.FunctionalityName == functionalityName) && (a.RoleName == roleName)));
+        }
+    }
 }

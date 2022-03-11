@@ -13,4 +13,11 @@ namespace DeviceService.Core.Dtos.Global
         public T ObjectValue { get; set; }
         public List<Log> Logs { get; set; }
     }
+
+    public class ReturnResponse
+    {
+        public int StatusCode { get; set; }
+        public string StatusMessage { get; set; }
+        public object ObjectValue { get; set; }
+    }
 }

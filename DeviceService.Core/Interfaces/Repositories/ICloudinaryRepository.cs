@@ -1,4 +1,4 @@
-﻿using Ayuda_Help_Desk.Dtos.General;
+﻿using DeviceService.Core.Dtos.Global;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
@@ -6,7 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Ayuda_Help_Desk.Interfaces
+namespace DeviceService.Core.Interfaces.Repositories
 {
     public interface ICloudinaryRepository
     {

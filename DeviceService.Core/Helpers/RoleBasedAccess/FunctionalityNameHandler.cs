@@ -6,9 +6,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Ayuda_Help_Desk.Models;
 using DeviceService.Core.Data.DataContext;
 using DeviceService.Core.Helpers.Common;
+using DeviceService.Core.Entities;
+using DeviceService.Core.Interfaces.Repositories;
 
 namespace DeviceService.Core.Helpers.RoleBasedAccess
 {
@@ -43,7 +44,7 @@ namespace DeviceService.Core.Helpers.RoleBasedAccess
             // check if any of the user's roles has the the functionality name mapped to it.
             var funcName = requirement.FuncName;
             var roles = context.User.FindAll(c => c.Type == ClaimTypes.Role).Select(c => c.Value).ToList();
-            var funcRole = _dataContext.FunctionalitySupportLevel.Where(a => a.FunctionalityName == funcName).Include(b => b.SupportLevel).ThenInclude(c => c.Roles).Select(d => d.SupportLevel.Roles).SelectMany(e => e).Select(f => f.Name).ToList();
+            var funcRole = _dataContext.FunctionalityRole.Where(c => c.FunctionalityName == funcName).Select(r => r.RoleName).ToList();
 
             foreach (var role in roles)
             {

@@ -1,5 +1,13 @@
 ﻿using AutoMapper;
-using CBN_eNaira.Core.Dtos.CBNENairaService;
+using DeviceService.Core.Dtos.AuditReport;
+using DeviceService.Core.Dtos.AuditReportActivity;
+using DeviceService.Core.Dtos.Auth;
+using DeviceService.Core.Dtos.Device;
+using DeviceService.Core.Dtos.DeviceOperation;
+using DeviceService.Core.Dtos.DeviceType;
+using DeviceService.Core.Dtos.RoleFunctionality;
+using DeviceService.Core.Dtos.User;
+using DeviceService.Core.Entities;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -10,21 +18,58 @@ namespace DeviceService.Core.Helpers.MapperProfiles
     {
         public AutoMapperProfile()
         {
-            //USERTYPE SERVICE USER AUTHORIZE WITHDRAWAL
-            CreateMap<AuthorizeUserTypeWithdrawalRequest, CustomerAuthorizeWithdrawalRequest>()
-                .ForMember(dest => dest.CustomerAuthToken, action => { action.MapFrom(source => source.UserAuthToken); })
-                .ForPath(dest => dest.WithdrawalEnableDetail.enableWithdrawal, action => { action.MapFrom(source => source.AuthorizeWithdrawal); });
-            CreateMap<ReturnResponse<CustomerAuthorizeWithdrawalResponse>, ReturnResponse<AuthorizeUserTypeWithdrawalResponse>>();
-            CreateMap<CustomerAuthorizeWithdrawalResponse, AuthorizeUserTypeWithdrawalResponse>()
-                .ForMember(dest => dest.State, action => { action.MapFrom(source => source.enableWithdrawal.state); })
-                .ForMember(dest => dest.ExpiryDate, action => { action.MapFrom(source => source.enableWithdrawal.expiry); });
-            CreateMap<AuthorizeUserTypeWithdrawalRequest, MerchantAuthorizeWithdrawalRequest>()
-                .ForMember(dest => dest.MerchantAuthToken, action => { action.MapFrom(source => source.UserAuthToken); })
-                .ForPath(dest => dest.WithdrawalEnableDetail.enableWithdrawal, action => { action.MapFrom(source => source.AuthorizeWithdrawal); });
-            CreateMap<ReturnResponse<MerchantAuthorizeWithdrawalResponse>, ReturnResponse<AuthorizeUserTypeWithdrawalResponse>>();
-            CreateMap<MerchantAuthorizeWithdrawalResponse, AuthorizeUserTypeWithdrawalResponse>()
-                .ForMember(dest => dest.State, action => { action.MapFrom(source => source.enableWithdrawal.state); })
-                .ForMember(dest => dest.ExpiryDate, action => { action.MapFrom(source => source.enableWithdrawal.expiry); });
+            CreateMap<User, UserDetails>();
+            CreateMap<UserDetails, UserLoginResponse>();
+            CreateMap<User, UserToReturn>();
+            CreateMap<User, UserWithUserTypeObjectResponse>();
+            CreateMap<User, UserToReturnForLogin>();
+            CreateMap<UserDetails, UserLoginResponseForLogin>();
+
+            CreateMap<FunctionalityRequest, Functionality>();
+            CreateMap<Functionality, FunctionalityResponse>();
+
+            CreateMap<ProjectModuleRequest, ProjectModule>();
+            CreateMap<ProjectModule, ProjectModuleResponse>();
+
+            CreateMap<RoleRequest, Role>();
+            CreateMap<Role, RoleResponse>();
+            CreateMap<RoleResponse, Role>().ForMember(a2 => a2.CreatedAt, b2 => b2.Ignore());
+            CreateMap<Role, RoleResponseForLogin>();
+            CreateMap<UserRole, UserRoleResponseForLogin>();
+
+            CreateMap<AuditReportActivityRequest, AuditReportActivity>();
+            CreateMap<AuditReportActivity, AuditReportActivityResponse>();
+            CreateMap<AuditReportActivityToUpdate, AuditReportActivity>();
+            CreateMap<AuditReportRequest, AuditReport>();
+            CreateMap<AuditReport, AuditReportResponse>();
+            CreateMap<User, AuditReportUserResponse>();
+
+            CreateMap<UserRole, UserRoleResponse>();
+            CreateMap<UserRole, UserRoleToReturn>();
+            CreateMap<FunctionalityRole, FunctionalityRoleResponse>();
+
+            CreateMap<DeviceOperationRequest, DeviceOperation>();
+            CreateMap<DeviceOperation, DeviceOperationResponse>();
+            CreateMap<DeviceOperationToUpdate, DeviceOperation>();
+
+            CreateMap<DeviceTypeRequest, DeviceType>();
+            CreateMap<DeviceType, DeviceTypeResponse>();
+            CreateMap<DeviceTypeToUpdate, DeviceType>();
+            CreateMap<DeviceTypeOperationRequest, DeviceTypeOperation>();
+            CreateMap<DeviceTypeOperation, DeviceTypeOperationResponse>();
+
+            CreateMap<UserRequest, User>();
+            CreateMap<User, UserResponse>();
+            CreateMap<UserToUpdate, User>();
+
+            CreateMap<DeviceRequest, Device>();
+            CreateMap<Device, DeviceResponse>();
+            CreateMap<DeviceToUpdate, Device>();
+            CreateMap<StatusUpdate, Device>();
+            CreateMap<TemperatureUpdate, Device>();
+            CreateMap<UsageUpdate, Device>();
+            CreateMap<Device, DevicePartialResponse>();
+            CreateMap<Device, DeviceWithRelatedDevicesResponse>();
         }
     }
 }

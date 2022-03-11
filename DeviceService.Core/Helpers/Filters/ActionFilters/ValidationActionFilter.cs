@@ -21,7 +21,7 @@ namespace DeviceService.Core.Helpers.Filters.ActionFilters
             {
                 context.Result = new ObjectResult(new ControllerReturnResponse<string>()
                 {
-                    StatusCode = Utils.StatusCode_CBNENairaEndpointBadRequest,
+                    StatusCode = Utils.HttpStatusCode_BadRequest,
                     StatusMessage = context.ModelState.Where(x => x.Value.Errors.Count > 0).ToDictionary(kvp => kvp.Key, kvp => string.Join(", ", kvp.Value.Errors.Select(e => e.ErrorMessage))).ToDictionaryString()
                 })
                 {

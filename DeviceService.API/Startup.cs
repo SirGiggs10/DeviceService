@@ -5,6 +5,9 @@ using DeviceService.Core.Helpers.ConfigurationSettings;
 using DeviceService.Core.Helpers.Extensions;
 using DeviceService.Core.Helpers.Filters.ActionFilters;
 using DeviceService.Core.Helpers.Logging.Logger;
+using DeviceService.Core.Helpers.RoleBasedAccess;
+using DeviceService.Core.Interfaces.Repositories;
+using DeviceService.Core.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -127,7 +130,16 @@ namespace DeviceService.API
             services.AddTransient<IAuthorizationPolicyProvider, FunctionalityNamePolicy>();
             services.AddTransient<IAuthorizationHandler, FunctionalityNameHandler>();
             //OTHERS
-
+            services.AddScoped<IAuditReportActivityRepository, AuditReportActivityRepository>();
+            services.AddScoped<IAuditReportRepository, AuditReportRepository>();
+            services.AddScoped<IAuthRepository, AuthRepository>();
+            services.AddScoped<ICloudinaryRepository, CloudinaryRepository>();
+            services.AddScoped<IDeviceOperationRepository, DeviceOperationRepository>();
+            services.AddScoped<IDeviceRepository, DeviceRepository>();
+            services.AddScoped<IDeviceTypeRepository, DeviceTypeRepository>();
+            services.AddScoped<IGlobalRepository, GlobalRepository>();
+            services.AddScoped<IRoleManagementRepository, RoleManagementRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
 
             services.AddSwaggerGen(c =>
             {
@@ -157,7 +169,10 @@ namespace DeviceService.API
             LogWriter.Logger = logger;
             MyHttpContextAccessor.HttpContextAccessor = httpContextAccessor;
 
+            //FOR LOGGING HTTP WEB REQUEST AND RESPONSES
             app.AddCustomRequestAndResponseLoggingMiddleware(); //PUT THIS ALWAYS AT THE START OF THE PIPELINE INCASE OF UNHANDLED EXCEPTIONS. BECAUSE UNHANDLED EXCEPTIONS CAUSE UNEXPECTED ERRORS WITH THIS MIDDLEWARE
+            //FOR CATCHING UNHANDLED EXCEPTIONS
+            app.AddCustomExceptionHandlerMiddleware();
 
             if (env.IsDevelopment())
             {
@@ -173,9 +188,12 @@ namespace DeviceService.API
             app.UseRouting();
             app.UseCors("CORSPolicy");
 
-            // Enable middleware to serve generated Swagger as a JSON endpoint.
-            app.UseSwagger();
-            app.UseSwaggerUI(c => c.SwaggerEndpoint("./v1/swagger.json", "DeviceService.API v1"));
+            if (env.IsDevelopment())
+            {
+                // Enable middleware to serve generated Swagger as a JSON endpoint.
+                app.UseSwagger();
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("./v1/swagger.json", "DeviceService.API v1"));
+            }
 
             app.UseAuthentication();
             app.UseAuthorization();

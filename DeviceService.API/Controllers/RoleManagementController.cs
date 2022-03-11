@@ -3,16 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using Ayuda_Help_Desk.Dtos.RoleFunctionality;
-using Ayuda_Help_Desk.Helpers;
-using Ayuda_Help_Desk.Interfaces;
-using Ayuda_Help_Desk.Models;
 using DeviceService.Core.Data.DataContext;
+using DeviceService.Core.Dtos.AuditReport;
+using DeviceService.Core.Dtos.Global;
+using DeviceService.Core.Dtos.RoleFunctionality;
+using DeviceService.Core.Entities;
 using DeviceService.Core.Helpers.Common;
+using DeviceService.Core.Helpers.Pagination;
 using DeviceService.Core.Helpers.RoleBasedAccess;
+using DeviceService.Core.Interfaces.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using DeviceService.Core.Helpers.Extensions;
 
 namespace DeviceService.Controllers
 {
@@ -617,37 +620,52 @@ namespace DeviceService.Controllers
             }
         }
 
+        /// <summary>
+        /// ASSIGN ROLES TO FUNCTIONALITY
+        /// </summary>
         [HttpPost("Functionalities/Roles/Assign")]
         public async Task<ActionResult> PostAssignRolesToFunctionality(List<RoleFunctionalityAssignmentRequest> roleFunctionalityAssignmentRequest)
         {
-            var result = await _userManagementRepository.AssignRolesToFunctionality(roleFunctionalityAssignmentRequest);
+            var dbTransaction = await _dataContext.Database.BeginTransactionAsync();
+            var result = await _roleManagementRepository.AssignRolesToFunctionality(roleFunctionalityAssignmentRequest);
 
-            if (result.StatusCode == Status.Success)
+            if (result.StatusCode == Utils.Success)
             {
                 result.ObjectValue = _mapper.Map<List<FunctionalityRoleResponse>>(((List<FunctionalityRole>)result.ObjectValue));
                 return StatusCode(StatusCodes.Status200OK, result.ObjectValue);
+
+                await dbTransaction.CommitAsync();
+
+                return StatusCode(StatusCodes.Status200OK, result.ObjectValue);
             }
-            else if (result.StatusCode == Status.NotFound)
+            else if(result.StatusCode == Utils.NotFound)
             {
+                await dbTransaction.RollbackAsync();
+
                 return StatusCode(StatusCodes.Status404NotFound, result);
             }
             else
             {
+                await dbTransaction.RollbackAsync();
+
                 return StatusCode(StatusCodes.Status400BadRequest, result);
             }
         }
 
+        /// <summary>
+        /// GET ALL FUNCTIONALITIES AND THEIR ROLES
+        /// </summary>
         [HttpGet("Functionalities/Roles")]
-        public async Task<ActionResult> GetFunctionalitiesRoles()
+        public async Task<ActionResult> GetFunctionalitiesRoles(UserParams userParams)
         {
-            var result = await _userManagementRepository.GetFunctionalitiesRoles();
+            var result = await _roleManagementRepository.GetFunctionalitiesRoles(userParams);
 
-            if (result.StatusCode == Status.Success)
+            if (result.StatusCode == Utils.Success)
             {
                 result.ObjectValue = _mapper.Map<List<FunctionalityRoleResponse>>(((List<FunctionalityRole>)result.ObjectValue));
                 return StatusCode(StatusCodes.Status200OK, result.ObjectValue);
             }
-            else if (result.StatusCode == Status.NotFound)
+            else if (result.StatusCode == Utils.NotFound)
             {
                 return StatusCode(StatusCodes.Status404NotFound, result);
             }

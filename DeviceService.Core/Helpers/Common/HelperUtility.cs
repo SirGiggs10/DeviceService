@@ -28,7 +28,7 @@ namespace DeviceService.Core.Helpers.Common
 
                     controllerReturnResponse.ResponseCode = (HttpStatusCode)Utils.HttpStatusCode_Ok;
                     //controllerReturnResponse.ResponseDescription = Utils.StatusMessage_CBNENairaLoginEndpointSuccess;
-                    controllerReturnResponse.StatusCode = Utils.StatusCode_CBNENairaEndpointSuccess;
+                    controllerReturnResponse.StatusCode = Utils.StatusCode_Success;
                     controllerReturnResponse.StatusMessage = apiResponse.ResponseDescription;
 
                     break;

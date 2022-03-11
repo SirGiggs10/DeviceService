@@ -8,11 +8,12 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
-using Ayuda_Help_Desk.Models;
 using Microsoft.Extensions.Primitives;
 using DeviceService.Core.Data.DataContext;
 using DeviceService.Core.Dtos.Global;
 using DeviceService.Core.Interfaces.Repositories;
+using DeviceService.Core.Entities;
+using DeviceService.Core.Dtos.Auth;
 
 namespace DeviceService.Core.Repositories
 {

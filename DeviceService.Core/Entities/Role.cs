@@ -15,5 +15,6 @@ namespace DeviceService.Core.Entities
         public DateTimeOffset? ModifiedAt { get; set; }
 
         public virtual List<UserRole> UserRoles { get; set; }
+        public virtual List<FunctionalityRole> FunctionalityRoles { get; set; }
     }
 }

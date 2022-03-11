@@ -1,4 +1,4 @@
-﻿using CBN_eNaira.Core.Helpers.Extensions;
+﻿using DeviceService.Core.Helpers.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Text;

@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
-using Ayuda_Help_Desk.Data;
-using Ayuda_Help_Desk.Dtos.AuditReportActivity;
-using Ayuda_Help_Desk.Dtos.General;
-using Ayuda_Help_Desk.Helpers;
-using Ayuda_Help_Desk.Interfaces;
-using Ayuda_Help_Desk.Models;
+using DeviceService.Core.Data.DataContext;
+using DeviceService.Core.Dtos.AuditReportActivity;
+using DeviceService.Core.Dtos.Global;
+using DeviceService.Core.Entities;
+using DeviceService.Core.Helpers.Common;
+using DeviceService.Core.Interfaces.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -12,16 +12,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Ayuda_Help_Desk.Repositories
+namespace DeviceService.Core.Repositories
 {
     public class AuditReportActivityRepository : IAuditReportActivityRepository
     {
-        private readonly DataContext _dataContext;
+        private readonly DeviceContext _dataContext;
         private readonly IGlobalRepository _globalRepository;
         private readonly IMapper _mapper;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public AuditReportActivityRepository(DataContext dataContext, IGlobalRepository globalRepository, IMapper mapper, IHttpContextAccessor httpContextAccessor)
+        public AuditReportActivityRepository(DeviceContext dataContext, IGlobalRepository globalRepository, IMapper mapper, IHttpContextAccessor httpContextAccessor)
         {
             _dataContext = dataContext;
             _globalRepository = globalRepository;
@@ -169,7 +169,7 @@ namespace Ayuda_Help_Desk.Repositories
             }
 
             var userTypeVal = Convert.ToInt32(userType.Value);
-            if(userTypeVal != Utils.Staff)
+            if(userTypeVal != Utils.UserType_User)
             {
                 return new ReturnResponse()
                 {
@@ -209,7 +209,7 @@ namespace Ayuda_Help_Desk.Repositories
             }
 
             var userTypeVal = Convert.ToInt32(userType.Value);
-            if (userTypeVal != Utils.Staff)
+            if (userTypeVal != Utils.UserType_User)
             {
                 return new ReturnResponse()
                 {

@@ -5,15 +5,16 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Ayuda_Help_Desk.Data;
-using Ayuda_Help_Desk.Models;
-using Ayuda_Help_Desk.Helpers;
-using Ayuda_Help_Desk.Interfaces;
 using AutoMapper;
-using Ayuda_Help_Desk.Dtos.AuditReport;
 using Microsoft.AspNetCore.Authorization;
-using Ayuda_Help_Desk.Dtos.UserManagement;
-using Ayuda_Help_Desk.Dtos.General;
+using DeviceService.Core.Data.DataContext;
+using DeviceService.Core.Interfaces.Repositories;
+using DeviceService.Core.Helpers.RoleBasedAccess;
+using DeviceService.Core.Helpers.Common;
+using DeviceService.Core.Entities;
+using DeviceService.Core.Dtos.AuditReport;
+using DeviceService.Core.Dtos.Global;
+using DeviceService.Core.Helpers.Pagination;
 
 namespace Ayuda_Help_Desk.Controllers
 {
@@ -22,11 +23,11 @@ namespace Ayuda_Help_Desk.Controllers
     [ApiController]
     public class AuditReportsController : ControllerBase
     {
-        private readonly DataContext _dataContext;
+        private readonly DeviceContext _dataContext;
         private readonly IAuditReportRepository _auditReportRepository;
         private readonly IMapper _mapper;
 
-        public AuditReportsController(DataContext dataContext, IAuditReportRepository auditReportRepository, IMapper mapper)
+        public AuditReportsController(DeviceContext dataContext, IAuditReportRepository auditReportRepository, IMapper mapper)
         {
             _dataContext = dataContext;
             _auditReportRepository = auditReportRepository;
@@ -34,6 +35,9 @@ namespace Ayuda_Help_Desk.Controllers
         }
 
         // GET: api/AuditReports/User/3
+        /// <summary>
+        /// GET AUDIT REPORT FOR USER
+        /// </summary>
         [RequiredFunctionalityName("GetAuditReportsForUser")]
         [HttpGet("User/{userId}")]
         public async Task<ActionResult<IEnumerable<AuditReport>>> GetAuditReportsForUser([FromRoute] int userId, [FromQuery] UserParams userParams)
@@ -67,6 +71,9 @@ namespace Ayuda_Help_Desk.Controllers
         }
 
         // POST: api/AuditReports/User/3/Date
+        /// <summary>
+        /// GET AUDIT REPORT FOR USER BY DATE RANGE
+        /// </summary>
         [RequiredFunctionalityName("GetAuditReportsForUserByDateRange")]
         [HttpPost("User/{userId}/Date")]
         public async Task<ActionResult<IEnumerable<AuditReport>>> GetAuditReportsForUserByDateRange([FromRoute] int userId, [FromQuery] UserParams userParams, [FromBody] AuditReportDateRangeRequest auditReportDateRangeRequest)
@@ -100,6 +107,9 @@ namespace Ayuda_Help_Desk.Controllers
         }
 
         // GET: api/AuditReports/5
+        /// <summary>
+        /// GET AUDIT REPORT BY ID
+        /// </summary>
         [RequiredFunctionalityName("GetAuditReport")]
         [HttpGet("{id}")]
         public async Task<ActionResult<AuditReport>> GetAuditReport(int id)
@@ -133,6 +143,9 @@ namespace Ayuda_Help_Desk.Controllers
         }
 
         // PUT: api/AuditReports/5
+        /// <summary>
+        /// UPDATE AUDIT REPORT
+        /// </summary>
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [RequiredFunctionalityName("PutAuditReport")]
@@ -142,7 +155,7 @@ namespace Ayuda_Help_Desk.Controllers
             throw new NotImplementedException();
         }
 
-        // POST: api/AuditReports
+        /*// POST: api/AuditReports
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [RequiredFunctionalityName("PostAuditReport")]
@@ -150,9 +163,12 @@ namespace Ayuda_Help_Desk.Controllers
         public async Task<ActionResult<AuditReport>> PostAuditReport(AuditReport auditReport)
         {
             throw new NotImplementedException();
-        }
+        }*/
 
         // DELETE: api/AuditReports/Delete
+        /// <summary>
+        /// DELETE AUDIT REPORTS
+        /// </summary>
         [RequiredFunctionalityName("DeleteAuditReport")]
         [HttpPost("Delete")]
         public async Task<ActionResult<AuditReport>> DeleteAuditReport(List<int> auditReportIds)

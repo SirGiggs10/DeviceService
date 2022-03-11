@@ -4,7 +4,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
-namespace DeviceService.Core.Dtos.Global
+namespace DeviceService.Core.Dtos.Auth
 {
     public class LoggedInUserInfo
     {

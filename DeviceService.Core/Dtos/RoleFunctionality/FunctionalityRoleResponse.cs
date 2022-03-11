@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Ayuda_Help_Desk.Dtos.RoleFunctionality
+namespace DeviceService.Core.Dtos.RoleFunctionality
 {
     public class FunctionalityRoleResponse
     {
-        public int Id { get; set; }
         public int RoleId { get; set; }
-        public string FunctionalityName { get; set; }
         public string RoleName { get; set; }
+        public int FunctionalityId { get; set; }
+        public string FunctionalityName { get; set; }
+        public DateTimeOffset CreatedAt { get; set; }
     }
 }

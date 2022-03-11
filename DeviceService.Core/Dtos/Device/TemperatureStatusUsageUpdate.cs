@@ -27,6 +27,6 @@ namespace DeviceService.Core.Dtos.Device
         [Required]
         public int DeviceId { get; set; }
         [Required]
-        public int TotalUsageTimeInHours { get; set; }
+        public double TotalUsageTimeInHours { get; set; }
     }
 }

@@ -17,7 +17,7 @@ namespace DeviceService.Core.Entities
         public int DeviceTypeId { get; set; }
         public string Status { get; set; } = Utils.DeviceStatus.Offline.ToString();
         public double Temperature { get; set; } = 0;
-        public int TotalUsageTimeInHours { get; set; } = 0;
+        public double TotalUsageTimeInHours { get; set; } = 0;
         public string DeviceIconPublicId { get; set; }
         public string DeviceIconUrl { get; set; }
         public string DeviceIconFileName { get; set; }

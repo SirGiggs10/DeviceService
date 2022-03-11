@@ -14,7 +14,7 @@ namespace DeviceService.Core.Dtos.Device
         public int DeviceTypeId { get; set; }
         public int Status { get; set; }
         public double Temperature { get; set; }
-        public int TotalUpTimeInHours { get; set; }
+        public double TotalUpTimeInHours { get; set; }
         public string DeviceIconPublicId { get; set; }
         public string DeviceIconUrl { get; set; }
         public string DeviceIconFileName { get; set; }

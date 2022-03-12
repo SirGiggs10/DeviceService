@@ -13,7 +13,7 @@ namespace DeviceService.Core.Data.EntityConfigurations
         {
             builder.HasKey(a => a.AuditReportActivityId);
             builder.Property(a => a.AuditReportActivityId).HasColumnName("AuditReportActivityId").ValueGeneratedOnAdd().UseIdentityColumn().IsRequired(true);
-            builder.Property(a => a.FunctionalityId).HasColumnName("FunctionalityId");
+            builder.Property(a => a.FunctionalityId).HasColumnName("FunctionalityId").IsRequired(true);
             builder.Property(a => a.AuditReportActivityDescription).HasColumnName("AuditReportActivityDescription");
             builder.Property(a => a.AuditReportActivityViewUrl).HasColumnName("AuditReportActivityViewUrl");
             builder.Property(a => a.FrontendRoute).HasColumnName("FrontendRoute");

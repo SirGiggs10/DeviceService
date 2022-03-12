@@ -296,6 +296,7 @@ namespace DeviceService.Core.Helpers.Encryption.EncryptionUtility
                 rijAlg.KeySize = keySize;
                 rijAlg.Key = key;
                 rijAlg.IV = IV;
+                //rijAlg.Padding = PaddingMode.Zeros;
 
                 // Create a decryptor to perform the stream transform.
                 ICryptoTransform encryptor = rijAlg.CreateEncryptor(rijAlg.Key, rijAlg.IV);
@@ -343,6 +344,7 @@ namespace DeviceService.Core.Helpers.Encryption.EncryptionUtility
                 rijAlg.Mode = cipherMode;
                 rijAlg.Key = Key;
                 rijAlg.IV = IV;
+                //rijAlg.Padding = PaddingMode.Zeros;
 
                 // Create a decrytor to perform the stream transform.
                 ICryptoTransform decryptor = rijAlg.CreateDecryptor(rijAlg.Key, rijAlg.IV);

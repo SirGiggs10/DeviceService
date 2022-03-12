@@ -13,8 +13,10 @@ namespace DeviceService.Core.Data.EntityConfigurations
         {
             builder.HasKey(a => a.ProjectModuleId);
             builder.Property(a => a.ProjectModuleId).HasColumnName("ProjectModuleId").ValueGeneratedOnAdd().UseIdentityColumn().IsRequired(true);
-            builder.Property(a => a.ProjectModuleName).HasColumnName("ProjectModuleName");
+            builder.Property(a => a.ProjectModuleName).HasColumnName("ProjectModuleName").IsRequired(true);
             builder.Property(a => a.CreatedAt).HasColumnName("CreatedAt").IsRequired(true);
+
+            builder.HasIndex(a => a.ProjectModuleName).IsUnique(true);
 
             builder.ToTable("ProjectModule");
         }

@@ -11,10 +11,10 @@ namespace DeviceService.Core.Data.EntityConfigurations
     {
         public void Configure(EntityTypeBuilder<AuditReport> builder)
         {
-            builder.HasKey(a => a.AuditReportActivityId);
+            builder.HasKey(a => a.AuditReportId);
             builder.Property(a => a.AuditReportId).HasColumnName("AuditReportId").ValueGeneratedOnAdd().UseIdentityColumn().IsRequired(true);
-            builder.Property(a => a.AuditReportActivityId).HasColumnName("AuditReportActivityId");
-            builder.Property(a => a.UserId).HasColumnName("UserId");
+            builder.Property(a => a.AuditReportActivityId).HasColumnName("AuditReportActivityId").IsRequired(true);
+            builder.Property(a => a.UserId).HasColumnName("UserId").IsRequired(true);
             builder.Property(a => a.AuditReportActivityResourceId).HasColumnName("AuditReportActivityResourceId");
             builder.Property(a => a.CreatedAt).HasColumnName("CreatedAt").IsRequired(true);
 

@@ -23,7 +23,7 @@ namespace DeviceService.Core.Helpers.Common
         public const int StatusCode_ExceptionError = 13;
         public const int StatusCode_DatabaseConnectionError = 14;   
         
-        public const int Success = 20;
+        public const int Success = 0;
         public const int NotFound = 22;
         public const int ObjectNull = 23;
         public const int SaveError = 24;

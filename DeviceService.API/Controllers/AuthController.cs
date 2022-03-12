@@ -133,7 +133,7 @@ namespace Ayuda_Help_Desk.Controllers
         [RequiredFunctionalityName("PostChangePassword")]
         [HttpPost]
         [Route("ChangePassword")]
-        public async Task<ActionResult<ControllerReturnResponse<UserResponse>>> PostChangePassword([FromForm] ChangePasswordRequest changePasswordRequest)
+        public async Task<ActionResult<ControllerReturnResponse<UserResponse>>> PostChangePassword([FromBody] ChangePasswordRequest changePasswordRequest)
         {
             var dbTransaction = await _dataContext.Database.BeginTransactionAsync();
 

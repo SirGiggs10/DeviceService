@@ -13,9 +13,9 @@ namespace DeviceService.Core.Data.EntityConfigurations
         {
             builder.HasKey(a => a.DeviceId);
             builder.Property(a => a.DeviceId).HasColumnName("DeviceId").ValueGeneratedOnAdd().UseIdentityColumn().IsRequired(true);
-            builder.Property(a => a.DeviceName).HasColumnName("DeviceName");
-            builder.Property(a => a.UserId).HasColumnName("UserId");
-            builder.Property(a => a.DeviceTypeId).HasColumnName("DeviceTypeId");
+            builder.Property(a => a.DeviceName).HasColumnName("DeviceName").IsRequired(true);
+            builder.Property(a => a.UserId).HasColumnName("UserId").IsRequired(true);
+            builder.Property(a => a.DeviceTypeId).HasColumnName("DeviceTypeId").IsRequired(true);
             builder.Property(a => a.Status).HasColumnName("Status");
             builder.Property(a => a.Temperature).HasColumnName("Temperature");
             builder.Property(a => a.TotalUsageTimeInHours).HasColumnName("TotalUsageTimeInHours");

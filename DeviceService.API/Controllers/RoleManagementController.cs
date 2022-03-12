@@ -51,23 +51,23 @@ namespace DeviceService.Controllers
             {
                 var listOfRoles = _mapper.Map<List<RoleResponse>>(((List<Role>)result.ObjectValue));
                 result.ObjectValue = listOfRoles;
-                //AUDIT THIS ACTIVITY FOR THE USER
-                var auditResult = await _auditReportRepository.CreateAuditReport(new AuditReportRequest()
-                {
-                    AuditReportActivityFunctionalityName = "PostRoles",
-                    AuditReportActivityResourceId = listOfRoles.Select(a => a.Id).ToList()
-                });
+                ////AUDIT THIS ACTIVITY FOR THE USER
+                //var auditResult = await _auditReportRepository.CreateAuditReport(new AuditReportRequest()
+                //{
+                //    AuditReportActivityFunctionalityName = "PostRoles",
+                //    AuditReportActivityResourceId = listOfRoles.Select(a => a.Id).ToList()
+                //});
 
-                if (auditResult.StatusCode != Utils.Success)
-                {
-                    await dbTransaction.RollbackAsync();
+                //if (auditResult.StatusCode != Utils.Success)
+                //{
+                //    await dbTransaction.RollbackAsync();
 
-                    return StatusCode(StatusCodes.Status400BadRequest, new ReturnResponse()
-                    {
-                        StatusCode = Utils.AuditReportError,
-                        StatusMessage = Utils.StatusMessageAuditReportError
-                    });
-                }
+                //    return StatusCode(StatusCodes.Status400BadRequest, new ReturnResponse()
+                //    {
+                //        StatusCode = Utils.AuditReportError,
+                //        StatusMessage = Utils.StatusMessageAuditReportError
+                //    });
+                //}
 
                 await dbTransaction.CommitAsync();
 
@@ -328,7 +328,7 @@ namespace DeviceService.Controllers
                         StatusMessage = Utils.StatusMessageAuditReportError
                     });
                 }
-
+                
                 await dbTransaction.CommitAsync();
 
                 return StatusCode(StatusCodes.Status200OK, result.ObjectValue);
@@ -474,22 +474,22 @@ namespace DeviceService.Controllers
                 var listOfFunctionalities = _mapper.Map<List<FunctionalityResponse>>(((List<Functionality>)result.ObjectValue));
                 result.ObjectValue = listOfFunctionalities;
                 //AUDIT THIS ACTIVITY FOR THE USER
-                //var auditResult = await _auditReportRepository.CreateAuditReport(new AuditReportRequest()
-                //{
-                //    AuditReportActivityFunctionalityName = "PostFunctionalities",
-                //    AuditReportActivityResourceId = listOfFunctionalities.Select(a => a.FunctionalityId).ToList()
-                //});
+                var auditResult = await _auditReportRepository.CreateAuditReport(new AuditReportRequest()
+                {
+                    AuditReportActivityFunctionalityName = "PostFunctionalities",
+                    AuditReportActivityResourceId = listOfFunctionalities.Select(a => a.FunctionalityId).ToList()
+                });
 
-                //if (auditResult.StatusCode != Utils.Success)
-                //{
-                //    await dbTransaction.RollbackAsync();
+                if (auditResult.StatusCode != Utils.Success)
+                {
+                    await dbTransaction.RollbackAsync();
 
-                //    return StatusCode(StatusCodes.Status400BadRequest, new ReturnResponse()
-                //    {
-                //        StatusCode = Utils.AuditReportError,
-                //        StatusMessage = Utils.StatusMessageAuditReportError
-                //    });
-                //}
+                    return StatusCode(StatusCodes.Status400BadRequest, new ReturnResponse()
+                    {
+                        StatusCode = Utils.AuditReportError,
+                        StatusMessage = Utils.StatusMessageAuditReportError
+                    });
+                }
 
                 await dbTransaction.CommitAsync();
 
@@ -623,6 +623,7 @@ namespace DeviceService.Controllers
         /// <summary>
         /// ASSIGN ROLES TO FUNCTIONALITY
         /// </summary>
+        [RequiredFunctionalityName("PostAssignRolesToFunctionality")]
         [HttpPost("Functionalities/Roles/Assign")]
         public async Task<ActionResult> PostAssignRolesToFunctionality(List<RoleFunctionalityAssignmentRequest> roleFunctionalityAssignmentRequest)
         {
@@ -655,6 +656,7 @@ namespace DeviceService.Controllers
         /// <summary>
         /// GET ALL FUNCTIONALITIES AND THEIR ROLES
         /// </summary>
+        [RequiredFunctionalityName("GetFunctionalitiesRoles")]
         [HttpGet("Functionalities/Roles")]
         public async Task<ActionResult> GetFunctionalitiesRoles(UserParams userParams)
         {

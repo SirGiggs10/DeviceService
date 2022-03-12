@@ -16,6 +16,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -290,7 +291,8 @@ namespace DeviceService.API.Controllers
         [ProducesResponseType(typeof(NotSuccessfulResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(NotSuccessfulResponse), StatusCodes.Status500InternalServerError)]
         [Consumes("application/json")]
-        [RequiredFunctionalityName("PostUser")]
+        [AllowAnonymous]
+        //[RequiredFunctionalityName("PostUser")]
         [HttpPost]
         public async Task<ActionResult<ControllerReturnResponse<UserResponse>>> PostUser([FromBody] UserRequest userRequest)
         {
@@ -307,7 +309,8 @@ namespace DeviceService.API.Controllers
                 var auditResult = await _auditReportRepository.CreateAuditReport(new AuditReportRequest()
                 {
                     AuditReportActivityFunctionalityName = "PostUser",
-                    AuditReportActivityResourceId = new List<int>() { result.ObjectValue.Id }
+                    AuditReportActivityResourceId = new List<int>() { result.ObjectValue.Id },
+                    UserId = result.ObjectValue.Id
                 });
 
                 if (auditResult.StatusCode != Utils.Success)
@@ -377,7 +380,7 @@ namespace DeviceService.API.Controllers
         [Consumes("application/json")]
         [RequiredFunctionalityName("PostDeleteUser")]
         [HttpDelete("{userId}")]
-        public async Task<ActionResult<ControllerReturnResponse<UserResponse>>> PostDeleteUser([FromRoute] [Required] int userId)
+        public async Task<ActionResult<ControllerReturnResponse<UserResponse>>> PostDeleteUser([FromRoute][Required] int userId)
         {
             var dbTransaction = await _deviceContext.Database.BeginTransactionAsync();
 

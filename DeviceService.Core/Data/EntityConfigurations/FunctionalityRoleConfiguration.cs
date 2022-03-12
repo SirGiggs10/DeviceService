@@ -18,6 +18,8 @@ namespace DeviceService.Core.Data.EntityConfigurations
             builder.Property(a => a.RoleName).HasColumnName("RoleName").IsRequired(true);
             builder.Property(a => a.CreatedAt).HasColumnName("CreatedAt").IsRequired(true);
 
+            builder.HasIndex(a => new { a.FunctionalityName, a.RoleName}).IsUnique(true);
+
             builder.ToTable("FunctionalityRole");
 
             builder.HasOne(a => a.Functionality).WithMany(b => b.FunctionalityRoles).HasForeignKey(c => c.FunctionalityId).IsRequired(true);

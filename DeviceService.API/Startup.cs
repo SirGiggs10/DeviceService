@@ -2,6 +2,7 @@ using DeviceService.Core.Data.DataContext;
 using DeviceService.Core.Entities;
 using DeviceService.Core.Helpers.Common;
 using DeviceService.Core.Helpers.ConfigurationSettings;
+using DeviceService.Core.Helpers.ConfigurationSettings.ConfigManager;
 using DeviceService.Core.Helpers.Extensions;
 using DeviceService.Core.Helpers.Filters.ActionFilters;
 using DeviceService.Core.Helpers.Logging.Logger;
@@ -73,7 +74,7 @@ namespace DeviceService.API
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Configuration.GetSection("AppSettings:Secret").Value)),
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(ConfigSettings.AppSetting.Secret)),
                     ValidateIssuer = false,
                     ValidateAudience = false,
                     ClockSkew = TimeSpan.Zero

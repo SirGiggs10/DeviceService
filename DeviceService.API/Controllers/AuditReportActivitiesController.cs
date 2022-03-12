@@ -192,7 +192,7 @@ namespace DeviceService.Controllers
                         StatusMessage = Utils.StatusMessageAuditReportError
                     });
                 }
-                
+
                 await dbTransaction.CommitAsync();
 
                 return StatusCode(StatusCodes.Status200OK, result);

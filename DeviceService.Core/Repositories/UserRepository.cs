@@ -19,6 +19,7 @@ using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using DeviceService.Core.Dtos.RoleFunctionality;
 using DeviceService.Core.Dtos.Auth;
+using System.Security.Claims;
 
 namespace DeviceService.Core.Repositories
 {
@@ -69,6 +70,27 @@ namespace DeviceService.Core.Repositories
                         StatusMessage = "Role is Not Found",
                         Logs = logs
                     };
+                }
+
+                //MAKE SURE ONLY ADMIN REGISTERS ADMINS
+                if(role.Name == Utils.Role_Administrator)
+                {
+                    //AUTHENTICATE LOGGED IN USER
+                    var userClaim = MyHttpContextAccessor.GetHttpContextAccessor().HttpContext?.User?.Claims?.FirstOrDefault(a => a.Type == ClaimTypes.Role);
+
+                    if(!((userClaim != null) && (userClaim.Value == Utils.Role_Administrator)))
+                    {
+                        logBuilder.AppendLine($"{DateTime.Now:dd-MM-yyyy HH:mm:ss} Administrator User Claim Not Found or Logged In User does not have Administrator Role").AppendLine();
+                        logBuilder.AppendLine($"--------------{classAndMethodName}--------END--------").AppendLine();
+                        logBuilder.ToString().AddToLogs(ref logs);
+
+                        return new ReturnResponse<UserResponse>()
+                        {
+                            StatusCode = Utils.BadRequest,
+                            StatusMessage = "User Not Allowed to Create Administrator Users",
+                            Logs = logs
+                        };
+                    }
                 }
 
                 var userRoleForAssignment = new RoleResponse()
@@ -149,7 +171,7 @@ namespace DeviceService.Core.Repositories
                     };
                 }
 
-                logBuilder.AppendLine($"{DateTime.Now:dd-MM-yyyy HH:mm:ss} Creatibng User was not Successful").AppendLine();
+                logBuilder.AppendLine($"{DateTime.Now:dd-MM-yyyy HH:mm:ss} Creating User was not Successful").AppendLine();
                 logBuilder.AppendLine($"--------------{classAndMethodName}--------END--------").AppendLine();
                 logBuilder.ToString().AddToLogs(ref logs);
 

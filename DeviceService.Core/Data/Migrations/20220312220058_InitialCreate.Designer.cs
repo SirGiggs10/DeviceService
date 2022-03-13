@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DeviceService.Core.Data.Migrations
 {
     [DbContext(typeof(DeviceContext))]
-    [Migration("20220312060523_UniquePropertiesAdded")]
-    partial class UniquePropertiesAdded
+    [Migration("20220312220058_InitialCreate")]
+    partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -23,14 +23,6 @@ namespace DeviceService.Core.Data.Migrations
 
             modelBuilder.Entity("DeviceService.Core.Entities.AuditReport", b =>
                 {
-                    b.Property<int>("AuditReportActivityId")
-                        .HasColumnType("int")
-                        .HasColumnName("AuditReportActivityId");
-
-                    b.Property<string>("AuditReportActivityResourceId")
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("AuditReportActivityResourceId");
-
                     b.Property<int>("AuditReportId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
@@ -38,6 +30,14 @@ namespace DeviceService.Core.Data.Migrations
                         .HasAnnotation("SqlServer:IdentityIncrement", 1)
                         .HasAnnotation("SqlServer:IdentitySeed", 1)
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("AuditReportActivityId")
+                        .HasColumnType("int")
+                        .HasColumnName("AuditReportActivityId");
+
+                    b.Property<string>("AuditReportActivityResourceId")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("AuditReportActivityResourceId");
 
                     b.Property<DateTimeOffset>("CreatedAt")
                         .HasColumnType("datetimeoffset")
@@ -47,7 +47,9 @@ namespace DeviceService.Core.Data.Migrations
                         .HasColumnType("int")
                         .HasColumnName("UserId");
 
-                    b.HasKey("AuditReportActivityId");
+                    b.HasKey("AuditReportId");
+
+                    b.HasIndex("AuditReportActivityId");
 
                     b.HasIndex("UserId");
 
@@ -463,12 +465,10 @@ namespace DeviceService.Core.Data.Migrations
             modelBuilder.Entity("DeviceService.Core.Entities.UserRole", b =>
                 {
                     b.Property<int>("UserId")
-                        .HasColumnType("int")
-                        .HasColumnName("UserId");
+                        .HasColumnType("int");
 
                     b.Property<int>("RoleId")
-                        .HasColumnType("int")
-                        .HasColumnName("RoleId");
+                        .HasColumnType("int");
 
                     b.HasKey("UserId", "RoleId");
 
@@ -663,14 +663,14 @@ namespace DeviceService.Core.Data.Migrations
 
             modelBuilder.Entity("DeviceService.Core.Entities.UserRole", b =>
                 {
-                    b.HasOne("DeviceService.Core.Entities.Role", null)
-                        .WithMany()
+                    b.HasOne("DeviceService.Core.Entities.Role", "Role")
+                        .WithMany("UserRoles")
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("DeviceService.Core.Entities.User", null)
-                        .WithMany()
+                    b.HasOne("DeviceService.Core.Entities.User", "User")
+                        .WithMany("UserRoles")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();

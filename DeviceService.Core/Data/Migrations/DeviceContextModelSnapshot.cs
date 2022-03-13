@@ -661,14 +661,14 @@ namespace DeviceService.Core.Data.Migrations
 
             modelBuilder.Entity("DeviceService.Core.Entities.UserRole", b =>
                 {
-                    b.HasOne("DeviceService.Core.Entities.Role", null)
-                        .WithMany()
+                    b.HasOne("DeviceService.Core.Entities.Role", "Role")
+                        .WithMany("UserRoles")
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("DeviceService.Core.Entities.User", null)
-                        .WithMany()
+                    b.HasOne("DeviceService.Core.Entities.User", "User")
+                        .WithMany("UserRoles")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();

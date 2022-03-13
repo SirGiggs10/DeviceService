@@ -658,7 +658,7 @@ namespace DeviceService.Controllers
         /// </summary>
         [RequiredFunctionalityName("GetFunctionalitiesRoles")]
         [HttpGet("Functionalities/Roles")]
-        public async Task<ActionResult> GetFunctionalitiesRoles(UserParams userParams)
+        public async Task<ActionResult> GetFunctionalitiesRoles([FromQuery] UserParams userParams)
         {
             var result = await _roleManagementRepository.GetFunctionalitiesRoles(userParams);
 

@@ -1,5 +1,6 @@
 using DeviceService.Core.Data.DataContext;
 using DeviceService.Core.Entities;
+using DeviceService.Core.Helpers.Cloudinary;
 using DeviceService.Core.Helpers.Common;
 using DeviceService.Core.Helpers.ConfigurationSettings;
 using DeviceService.Core.Helpers.ConfigurationSettings.ConfigManager;
@@ -141,6 +142,8 @@ namespace DeviceService.API
             services.AddScoped<IGlobalRepository, GlobalRepository>();
             services.AddScoped<IRoleManagementRepository, RoleManagementRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
+
+            services.Configure<CloudinarySettings>(Configuration.GetSection("CloudinarySettings"));
 
             services.AddSwaggerGen(c =>
             {

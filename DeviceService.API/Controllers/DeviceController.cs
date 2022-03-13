@@ -996,10 +996,10 @@ namespace DeviceService.API.Controllers
         [ProducesResponseType(typeof(NotSuccessfulResponse), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(NotSuccessfulResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(NotSuccessfulResponse), StatusCodes.Status500InternalServerError)]
-        [Consumes("application/json")]
+        //[Consumes("application/json")]
         [RequiredFunctionalityName("PostDevice")]
         [HttpPost]
-        public async Task<ActionResult<ControllerReturnResponse<DeviceResponse>>> PostDevice([FromBody] DeviceRequest deviceRequest)
+        public async Task<ActionResult<ControllerReturnResponse<DeviceResponse>>> PostDevice([FromForm] DeviceRequest deviceRequest)
         {
             var dbTransaction = await _deviceContext.Database.BeginTransactionAsync();
 

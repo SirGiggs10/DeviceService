@@ -213,11 +213,9 @@ namespace DeviceService.Core.Repositories
             var logBuilder = new StringBuilder($"--------------{classAndMethodName}--------START--------").AppendLine();
             logBuilder.AppendLine($"{DateTime.Now:dd-MM-yyyy HH:mm:ss} Received Request for Deleting Users from The Database. Payload: {userId}").AppendLine();
 
-            var usersToDelete = new List<User>();
-
             try
             {
-                var user = await _userManager.Users.Where(a => a.Id == userId).FirstOrDefaultAsync();
+                var user = await _userManager.Users.Where(a => a.Id == userId).Include(b => b.UserRoles).FirstOrDefaultAsync();
 
                 if (user == null)
                 {
@@ -259,7 +257,7 @@ namespace DeviceService.Core.Repositories
                 {
                     StatusCode = Utils.StatusCode_Success,
                     StatusMessage = Utils.StatusMessage_Success,
-                    ObjectValue = _mapper.Map<UserResponse>(usersToDelete),
+                    ObjectValue = _mapper.Map<UserResponse>(user),
                     Logs = logs
                 };
             }

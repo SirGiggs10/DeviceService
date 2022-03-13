@@ -671,7 +671,8 @@ namespace DeviceService.Core.Repositories
                     {
                         FunctionalityName = functionalityDetail.FunctionalityName,
                         RoleId = roleDetail.Id,
-                        RoleName = roleDetail.Name
+                        RoleName = roleDetail.Name,
+                        FunctionalityId = functionalityDetail.FunctionalityId
                     };
                     _globalRepository.Add(functionalityRoleDetail);
 

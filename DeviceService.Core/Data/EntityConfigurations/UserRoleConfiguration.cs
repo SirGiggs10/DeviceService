@@ -11,7 +11,7 @@ namespace DeviceService.Core.Data.EntityConfigurations
     {
         public void Configure(EntityTypeBuilder<UserRole> builder)
         {
-            //builder.HasKey(a => new { a.UserId, a.RoleId });
+            builder.HasKey(a => new { a.UserId, a.RoleId });
             /*builder.Property(a => a.UserId).HasColumnName("UserId").IsRequired(true);
             builder.Property(a => a.RoleId).HasColumnName("RoleId").IsRequired(true);*/
 

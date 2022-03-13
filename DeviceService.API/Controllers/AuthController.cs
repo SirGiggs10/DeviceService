@@ -94,7 +94,7 @@ namespace Ayuda_Help_Desk.Controllers
 
                 await dbTransaction.CommitAsync();
 
-                return StatusCode(StatusCodes.Status200OK, new ControllerReturnResponse<UserLoginResponseForLogin>()
+                return StatusCode(StatusCodes.Status400BadRequest, new ControllerReturnResponse<UserLoginResponseForLogin>()
                 {
                     ResponseCode = HttpStatusCode.OK,
                     ResponseDescription = result.StatusMessage,
